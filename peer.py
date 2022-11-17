@@ -214,8 +214,10 @@ class Peer(Thread):
                             
     @Pyro5.server.expose
     def sendOutMessage(self):
-        print("Dear buyers and sellers, my id is ",self.peer_id,"and I am vacating the coordinator position")
+        print(datetime.datetime.now(),"Dear buyers and sellers, my id is ",self.peer_id,"and I am vacating the coordinator position")
         self.recvWon = False
+        self.recvOK = False
+        self.sendWon = False
         self.trader= []
         self.prev_role = self.role
         self.role = self.prev_role
@@ -228,7 +230,7 @@ class Peer(Thread):
 
     @Pyro5.server.expose
     def sendWonMessage(self):
-        print("Dear buyers and sellers, my id is ",self.peer_id,"and I am the new coordinator")
+        print(datetime.datetime.now(),"Dear buyers and sellers, my id is ",self.peer_id,"and I am the new coordinator")
         self.recvWon = True
         self.trader.append({"peer_id":self.peer_id,"id":self.id,"status":1})
         self.prev_role = self.role
@@ -239,13 +241,13 @@ class Peer(Thread):
             with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
                 neighbor.election_message("I Won",{"peer_id":self.peer_id,"id":self.id,"status":1})
 
-        # retire_chance = np.random.choice([i for i in range(1,21)],1)[0]
-        # if retire_chance <= 10:
-        #     self.won_sem.acquire()
-        #     self.sendOutMessage()
-        #     for neighbor_name in self.neighbors:
-        #         with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
-        #             neighbor.election_message("I won",{"peer_id":self.peer_id,"id":self.id,"status":1})
+        retire_chance = np.random.choice([i for i in range(1,21)],1)[0]
+        if retire_chance <= 7:
+            self.won_sem.acquire()
+            self.sendOutMessage()
+            # for neighbor_name in self.neighbors:
+            #     with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
+            #         neighbor.election_message("I Won",{"peer_id":self.peer_id,"id":self.id,"status":1})
 
     @Pyro5.server.expose
     def election_message(self,message,neighbor):
@@ -287,7 +289,7 @@ class Peer(Thread):
         elif message == "OK":
             self.recvOK = True
         elif message == "I Won":
-            print("Peer ",self.id,": Election Won Message received")
+            print(datetime.datetime.now(),"Peer ",self.id,": Election Won Message received")
             self.won_sem.acquire()
             self.recvWon = True
             self.won_sem.release()
@@ -296,15 +298,17 @@ class Peer(Thread):
             print("Begin Trading")
 
         # # TODO: add a fourth message saying "out of office" to restart the election process
-        # elif message == "Out of Office":
-        #     print("Peer ",self.id,": Out of Office message received")
-        #     self.won_sem.acquire()
-        #     self.recvWon = False
-        #     self.won_sem.release()
-        #     self.trader = []
-        #     # time.sleep(2)
-        #     if self.peer_id <= 2:
-        #         self.startElection()
+        elif message == "Out of Office":
+            print(datetime.datetime.now(),"Peer ",self.id,": Out of Office message received")
+            self.won_sem.acquire()
+            self.recvWon = False
+            self.recvOK = False
+            self.won_sem.release()
+            self.trader = []
+            # time.sleep(2)
+            if self.peer_id <= 2:
+                print("Peer ",self.id,": starting the election")
+                self.startElection()
 
     @Pyro5.server.expose
     def startElection(self):
