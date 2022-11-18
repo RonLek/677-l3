@@ -391,7 +391,7 @@ class Peer(Thread):
         transactions_file = "transactions.json"
         tlog = {"buyer":buyer_info["id"],"seller":"_","product":item,"completed":False}
         ## TODO: define put log
-        self.put_log(tlog,transactions_file,False)
+        self.put_log(tlog,transactions_file,False,True)
         for peer_id in self.seller_information.keys():
             if self.seller_information[peer_id]["product_name"] == item:
                 sellers.append(self.seller_information[peer_id])
@@ -405,7 +405,7 @@ class Peer(Thread):
             with open("seller_information.json","w") as sell:
                 json.dump(self.seller_information,sell)
             tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"completed":False}
-            self.put_log(tlog,transactions_file,False)
+            self.put_log(tlog,transactions_file,False,True)
             
             
             # seller's information should update
@@ -413,13 +413,14 @@ class Peer(Thread):
                     neighbor.transaction(item,buyer_info["id"],seller_peer_id,self.id,False)
 
             tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"completed":True}
-            self.put_log(tlog,transactions_file,True)
+            self.put_log(tlog,transactions_file,True,True)
             # buyer should let know the success
             with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
                     neighbor.transaction(item,buyer_info["id"],seller_peer_id,self.id,True)
         else:
             with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
                     neighbor.transaction(item,buyer_info["id"],"",self.id,False)
+                    self.put_log(tlog,transactions_file,True,False)
 
     @Pyro5.server.expose
     def transaction(self,product_name,buyer_id,seller_id,trader_id,buyer_success):
@@ -439,10 +440,10 @@ class Peer(Thread):
                 print(datetime.datetime.now(),self.id," could not find any seller for the item ",product_name)
 
     @Pyro5.server.expose
-    def put_log(self,tlog,transactions_file,completed):
+    def put_log(self,tlog,transactions_file,completed,available):
         self.transaction_semaphore.acquire()
         # if tlog["buyer"] not in self.transaction_information.keys():
-        if not completed:
+        if not completed and available:
             self.transaction_information[tlog["buyer"]] = tlog
         else:
             del self.transaction_information[tlog["buyer"]]
