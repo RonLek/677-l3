@@ -25,13 +25,13 @@ def get_peers():
         # wait for the nameserver to be up
         time.sleep(2)
 
-    # ensures at least 1 buyer
-    role = 'buyer'
+    # ensures at least 1 seller
+    role = 'seller'
     id = role + str(n_peers-2)
     peers.append(Peer(id, n_peers-2,role, n_items, products, ns_name, max_neighbors, hopcount))
 
-    # ensures at least 1 seller
-    role = 'seller'
+    # ensures at least 1 buyer
+    role = 'buyer'
     id = role + str(n_peers-1)
     peers.append(Peer(id, n_peers-1, role, n_items, products, ns_name, max_neighbors, hopcount))
 

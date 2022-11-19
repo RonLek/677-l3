@@ -11,6 +11,8 @@ import sys
 import numpy as np
 import json
 import os.path
+import atexit
+
 
 # import threading as td
 
@@ -80,6 +82,7 @@ class Peer(Thread):
         self.recvWon = False
         self.recvOK = False
         self.won_sem = BoundedSemaphore(1)
+        self.product_sem = BoundedSemaphore(1)
 
     def get_random_neighbors(self):
         """
@@ -173,29 +176,186 @@ class Peer(Thread):
                 # Create a neighbor list and assign neighbors to the peer
                 self.get_random_neighbors()
 
-                if self.bully_id <= 2:
-                    self.startElection(True)
+                if self.bully_id == 0:
+                    self.startElection()
                 
                 while True:
                     time.sleep(1)
 
         except Exception as e:
-            print("Exception in main", e)
-                            
+            print("Exception in main", e.with_traceback())
+
+
     @Pyro5.server.expose
-    def sendOutMessage(self):
-        print(datetime.datetime.now(),"Dear buyers and sellers, my bully id is ",self.bully_id,"and I am vacating the coordinator position")
-        self.recvWon = False
-        self.recvOK = False
-        self.sendWon = False
-        self.trader= []
-        self.prev_role = self.role
-        self.role = self.prev_role
-        self.prev_role = ""
-        self.won_sem.release()
-        for neighbor_name in self.neighbors:
-            with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
-                neighbor.election_message("Out of Office",{"bully_id":self.bully_id,"id":self.id,"status":1})
+    def election_message(self,message,neighbor):
+        print("Election message received from ",neighbor, " with message ",message)
+        if message == "Election":
+            if self.recvOK or self.recvWon:
+                with Pyro5.api.Proxy(self.neighbors[neighbor["id"]]) as neighbor_x:
+                    neighbor_x.election_message("OK",{"bully_id":self.bully_id,"id":self.id})
+            else:
+                with Pyro5.api.Proxy(self.neighbors[neighbor["id"]]) as neighbor_x:
+                    neighbor_x.election_message("OK",{"bully_id":self.bully_id,"id":self.id})
+                # neighbor_ids = [int(x[-1]) for x in self.neighbors]
+                # neighbor_ids = np.array(neighbor_ids)
+                # greater_x = len(neighbor_ids[neighbor_ids > self.bully_id])
+                neighbor_bully_ids = {}
+                for neighbor_id in self.neighbors:
+                    with Pyro5.api.Proxy(self.neighbors[neighbor_id]) as neighbor:
+                        neighbor_bully_ids[neighbor_id] = neighbor.get_bully_id()
+                        greater_bullies = [k for k, v in neighbor_bully_ids.items() if v > self.bully_id]
+                if len(greater_bullies) > 0:
+                    self.recvWon = False
+                    self.recvOK = False
+                    for ng in self.neighbors:
+                        if int(ng[-1]) > self.bully_id:
+                            if self.trader != [] and int(ng[-1]) == self.trader[0]["bully_id"]:
+                                continue
+                            else:
+                                with Pyro5.api.Proxy(self.neighbors[ng]) as neighbor:
+                                    print("election_message called at line 208")
+                                    if self.recvOK == False or self.recvWon == False:
+                                        neighbor.election_message("Election",{"bully_id":self.bully_id,"id":self.id})
+                    time.sleep(2)
+                    self.won_sem.acquire()
+                    if not self.recvOK and not self.recvWon:
+                        print("self.recvOK = ",self.recvOK)
+                        print("self.recvWon = ",self.recvWon)
+                        print("self.id = ",self.id)
+                        self.sendWon = True
+                        print("sendwonmessage called at line 221")
+                        print("neigbor_bully_ids",neighbor_bully_ids)
+                        print("self.bully_id",self.bully_id)
+                        self.sendWonMessage()
+                    else:
+                        self.won_sem.release()
+
+                else:
+                    self.won_sem.acquire()
+                    if self.sendWon == False:
+                        self.sendWon = True
+                        print("sendwonmessage called at line 229")
+                        self.sendWonMessage()
+                    else:
+                        self.won_sem.release()
+        elif message == "OK":
+            self.recvOK = True
+        elif message == "I Won":
+            print(datetime.datetime.now(),"Peer ",self.id,": Election Won Message received")
+            self.won_sem.acquire()
+            self.recvWon = True
+            # self.bully_id = random.randint(0, 200)
+            self.won_sem.release()
+            self.trader.clear()    
+            self.trader.append(neighbor)
+            # time.sleep(2)
+            print(self.id," has self.recvWon = ",self.recvWon)
+            print(self.id," has self.recvOK = ",self.recvOK)
+            print(self.id, " ready to begin trading")
+            # self.executor.submit(self.startTrading)
+        # # TODO: add a fourth message saying "out of office" to restart the election process
+        # elif message == "Out of Office":
+        #     print(datetime.datetime.now(),"Peer ",self.id,": Out of Office message received")
+        #     self.won_sem.acquire()
+        #     self.recvWon = False
+        #     self.recvOK = False
+        #     self.won_sem.release()
+        #     self.trader = []
+        #     # time.sleep(2)
+        #     if self.bully_id <= 2:
+        #         print("Peer ",self.id,": starting the election")
+        #         self.startElection(False)
+
+    @Pyro5.server.expose
+    def startElection(self):
+        print(datetime.datetime.now(),self.id," starting election")
+        time.sleep(2)
+        # if not first and not buy_request_done:
+        #     self.buy_request_semaphore.release()
+
+        ## TODO: IMP Remove this logic of deducing bully id from id
+        ## TODO: bully ids are randomized at the start of trading process for each peer
+        ## TODO: come up with a remote attribute accessible method to compare neighbor's peer ids
+        # neighbor_ids = [int(x[-1]) for x in self.neighbors]
+        # neighbor_ids = []
+        # for x in self.neighbors:
+        #     with Pyro5.api.Proxy(self.neighbors[ng]) as neighbor:
+        #         neighbor_ids.append(neighbor.bully_id)
+        # neighbor_ids = np.array(neighbor_ids)
+        # greater_x = len(neighbor_ids[neighbor_ids > self.bully_id])
+        # if geater bully id is found, then send message to all neighbors
+        neighbor_bully_ids = {}
+        for neighbor_id in self.neighbors:
+            with Pyro5.api.Proxy(self.neighbors[neighbor_id]) as neighbor:
+                neighbor_bully_ids[neighbor_id] = neighbor.get_bully_id()
+                greater_bullies = [k for k, v in neighbor_bully_ids.items() if v > self.bully_id]
+        if len(greater_bullies) > 0:
+            self.recvWon = False
+            self.recvOK = False
+            for ng in greater_bullies:
+                # if int(ng[-1]) > self.bully_id:
+                #     if self.trader != [] and int(ng[-1]) == self.trader[0]["bully_id"]:
+                #         continue
+                #     else:
+                with Pyro5.api.Proxy(self.neighbors[ng]) as neighbor:
+                    print("election_message called at line 300")
+                    if self.recvOK == False and self.recvWon == False:
+                        print("self.recvOK = ",self.recvOK)
+                        print("self.recvWon = ",self.recvWon)
+                        print("self.id = ",self.id)
+                        neighbor.election_message("Election",{"bully_id":self.bully_id,"id":self.id})
+            time.sleep(2)
+            # if peer doesn't receive any OK or Won message, it is the coordinator
+            self.won_sem.acquire()
+            if self.recvOK == False and self.recvWon == False:
+                self.sendWon = True
+                # semaphore is released in the sendWonMessage method
+                print("sendwonmessage called at line 288")
+                self.sendWonMessage()
+            else:
+                self.won_sem.release()
+        # if no greater bully id is found, it is the coordinator
+        else:
+            self.won_sem.acquire()
+            self.sendWon = True
+            # semaphore is released in the sendWonMessage method
+            print("sendwonmessage called at line 297")
+            self.sendWonMessage()
+
+    @Pyro5.server.expose
+    def startTrading(self):
+        self.reset_semaphore.acquire()
+        self.bully_id = random.randint(0, 200)
+        # self.recvOK = False
+        # self.recvWon = False
+        self.reset_semaphore.release()
+        print(datetime.datetime.now(),"trading entered by ",self.id)
+        time.sleep(2)
+        if self.role == "seller":
+            # with self.trader[0]['id']
+            print(datetime.datetime.now(),self.id," is registering its market for ",self.product_name)
+            with Pyro5.api.Proxy(self.neighbors[self.trader[0]['id']]) as neighbor:
+                neighbor.register_products({"seller":{"bully_id":self.bully_id,"id":self.id},"product_name": self.product_name,"product_count":self.product_count})
+        
+        elif self.role == "buyer":
+            #TODO: remove the hardcoded 6 value
+            # time.sleep(8.5+self.bully_id/6.0)
+            while True:
+                self.buy_request_done = False
+                ## TODO
+                ## TODO: add item count
+                print(datetime.datetime.now(),self.id," is looking to buy ",self.product_name)
+                with Pyro5.api.Proxy(self.neighbors[self.trader[0]['id']]) as neighbor:
+                    self.executor.submit(neighbor.trading_lookup, {"bully_id":self.bully_id,"id":self.id}, self.product_name)
+                    # neighbor.trading_lookup({"bully_id":self.bully_id,"id":self.id},desired_item)
+                # time.sleep(16)
+                self.buy_request_semaphore.acquire()
+                print(datetime.datetime.now(),"Peer ",self.id," ",self.buy_request_done)
+                if not self.buy_request_done:
+                    self.startElection()
+                self.buy_request_semaphore.release()
+        elif self.role == "trader":
+            pass
 
     @Pyro5.server.expose
     def sendWonMessage(self):
@@ -214,134 +374,55 @@ class Peer(Thread):
                 print("sending to my neighbor: ",neighbor_name)
                 with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
                     neighbor.election_message("I Won",{"bully_id":self.bully_id,"id":self.id})
-                    # try:
-                    #     self.executor.submit(neighbor.election_message, "I Won",{"bully_id":self.bully_id,"id":self.id,"status":1})
-                    # except Exception as e:
-                    #     print(datetime.datetime.now(), "Exception in sending I won to sellers", e)
                 # with Pyro5.client.Proxy(self.neighbors[neighbor_name]) as neighbor:
                 #     # Claim ownership of the seller proxy since each Pyro proxy is a thread
                 #     neighbor._pyroClaimOwnership()
                 #     # seller.buy(self.id)
-                #     neighbor.election_message("I Won",{"bully_id":self.bully_id,"id":self.id,"status":1})
+                #     neighbor.election_message("I Won",{"bully_id":self.bully_id,"id":self.id})
 
         # retire_chance = np.random.choice([i for i in range(1,21)],1)[0]
         # if retire_chance <= 7:
         #     self.won_sem.acquire()
         #     self.sendOutMessage()
         # else:
-        print("Begin Trading")
-        self.startTrading()
+        print("coordinator notified all neighbors.")
+
+        print("sellers register products with trader")
+        for neighbor_name in self.neighbors:
+            with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
+                if neighbor_name[:-1] == "seller":
+                    neighbor.startTrading()
+
+        print("buyers start trading on threads")
+        try:
+            while self.role == "trader":
+                for neighbor_name in self.neighbors:
+                        with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
+                            if neighbor_name[:-1] == "buyer":
+                                self.executor.submit(self.trading_lookup, neighbor.tradingMessage(), neighbor.productName())
+                print("starting next cycle")
+                time.sleep(5)
+            self.startElection()
+        except Exception as e:
+            print("Exception in starting trading lookup", e)
 
     @Pyro5.server.expose
-    def election_message(self,message,neighbor):
-        if message == "Election":
-            if self.recvOK or self.recvWon:
-                with Pyro5.api.Proxy(self.neighbors[neighbor["id"]]) as neighbor_x:
-                    neighbor_x.election_message("OK",{"bully_id":self.bully_id,"id":self.id})
-            else:
-                with Pyro5.api.Proxy(self.neighbors[neighbor["id"]]) as neighbor_x:
-                    neighbor_x.election_message("OK",{"bully_id":self.bully_id,"id":self.id})
-                neighbor_ids = [int(x[-1]) for x in self.neighbors]
-                neighbor_ids = np.array(neighbor_ids)
-                greater_x = len(neighbor_ids[neighbor_ids > self.bully_id])
-                if greater_x > 0:
-                    self.recvWon = False
-                    self.recvOK = False
-                    for ng in self.neighbors:
-                        if int(ng[-1]) > self.bully_id:
-                            if self.trader != [] and int(ng[-1]) == self.trader[0]["bully_id"]:
-                                continue
-                            else:
-                                with Pyro5.api.Proxy(self.neighbors[ng]) as neighbor:
-                                    neighbor.election_message("Election",{"bully_id":self.bully_id,"id":self.id,"status":1})
-                    time.sleep(2)
-                    self.won_sem.acquire()
-                    if self.recvOK == False and self.recvWon == False:
-                        self.sendWon = True
-                        self.sendWonMessage()
-                    else:
-                        self.won_sem.release()
-
-                else:
-                    self.won_sem.acquire()
-                    if self.sendWon == False:
-                        self.sendWon = True
-                        self.sendWonMessage()
-                    else:
-                        self.won_sem.release()
-        elif message == "OK":
-            self.recvOK = True
-        elif message == "I Won":
-            print(datetime.datetime.now(),"Peer ",self.id,": Election Won Message received")
-            self.won_sem.acquire()
-            self.recvWon = True
-            # self.bully_id = random.randint(0, 200)
-            self.won_sem.release()
-            self.trader.clear()    
-            self.trader.append(neighbor)
-            time.sleep(2)
-            print("Begin Trading for ",self.id)
-            self.executor.submit(self.startTrading)
-        # # TODO: add a fourth message saying "out of office" to restart the election process
-        elif message == "Out of Office":
-            print(datetime.datetime.now(),"Peer ",self.id,": Out of Office message received")
-            self.won_sem.acquire()
-            self.recvWon = False
-            self.recvOK = False
-            self.won_sem.release()
-            self.trader = []
-            # time.sleep(2)
-            if self.bully_id <= 2:
-                print("Peer ",self.id,": starting the election")
-                self.startElection(False)
+    def tradingMessage(self):
+        return {"bully_id":self.bully_id,"id":self.id}
 
     @Pyro5.server.expose
-    def startTrading(self):
-        self.reset_semaphore.acquire()
-        self.bully_id = random.randint(0, 200)
-        self.recvOK = False
-        self.recvWon = False
-        self.reset_semaphore.release()
-        if self.role == "seller":
-            # with self.trader[0]['id']
-            print(datetime.datetime.now(),self.id," is registering its market for ",self.product_name)
-            with Pyro5.api.Proxy(self.neighbors[self.trader[0]['id']]) as neighbor:
-                neighbor.register_products({"seller":{"bully_id":self.bully_id,"id":self.id},"product_name": self.product_name,"product_count":self.product_count})
-        
-        elif self.role == "buyer":
-            #TODO: remove the hardcoded 6 value
-            time.sleep(8.5+self.bully_id/6.0)
-            while True:
-                self.buy_request_done = False
-                desired_item = self.products[random.randint(0, len(self.products)-1)]
-                ## TODO
-                ## TODO: add item count
-                print(datetime.datetime.now(),self.id," is looking to buy ",desired_item)
-                with Pyro5.api.Proxy(self.neighbors[self.trader[0]['id']]) as neighbor:
-                    neighbor.trading_lookup({"bully_id":self.bully_id,"id":self.id},desired_item)
-                time.sleep(16)
-                self.buy_request_semaphore.acquire()
-                print(datetime.datetime.now(),"Peer ",self.id," ",self.buy_request_done)
-                if not self.buy_request_done:
-                    self.startElection(False)
-                self.buy_request_semaphore.release()
-        elif self.role == "trader":
-            pass
+    def get_bully_id(self):
+        return self.bully_id
 
     @Pyro5.server.expose
-    def register_products(self,seller_info):
-        self.storage_semaphore.acquire()
-        peer_id = seller_info["seller"]["id"]
-        self.seller_information[peer_id] = seller_info
+    def productName(self):
+        return self.product_name
 
-        with open("seller_information.json","w") as sell:
-            json.dump(self.seller_information,sell)
-        self.storage_semaphore.release()
-    
     @Pyro5.server.expose
     def trading_lookup(self,buyer_info,item):
         ##TODO
         self.fail_sem.acquire()
+        print("within trading lookup", self.role)
         var_trader = self.role == "trader"
         
         if var_trader:
@@ -352,20 +433,20 @@ class Peer(Thread):
             ## TODO: define put log
             self.put_log(tlog,transactions_file,False,True)
             retire_chance = np.random.choice([i for i in range(1,21)],1)[0]
-            if retire_chance <= 7:
-                self.won_sem.acquire()
-                print(datetime.datetime.now(),"[DEBUG] trader ",self.id, " is vacating the coordinator position silently")
-                self.recvWon = False
-                self.recvOK = False
-                self.sendWon = False
-                self.trader= []
-                self.role = self.prev_role
-                self.prev_role = ""
-                self.trader.clear()
-                print("[DEBUG] trader assumed new role: ", self.role)
-                self.won_sem.release()
-                self.fail_sem.release()
-                return
+            # if retire_chance <= 7:
+            #     self.won_sem.acquire()
+            #     print(datetime.datetime.now(),"[DEBUG] trader ",self.id, " is vacating the coordinator position silently")
+            #     self.recvWon = False
+            #     self.recvOK = False
+            #     self.sendWon = False
+            #     self.trader= []
+            #     self.role = self.prev_role
+            #     self.prev_role = ""
+            #     self.trader.clear()
+            #     print("[DEBUG] trader assumed new role: ", self.role)
+            #     self.won_sem.release()
+            #     self.fail_sem.release()
+            #     return
             for peer_id in self.seller_information.keys():
                 if self.seller_information[peer_id]["product_name"] == item:
                     sellers.append(self.seller_information[peer_id])
@@ -375,16 +456,20 @@ class Peer(Thread):
                 seller = sellers[0]
                 print("[DEBUG] seller: ", seller, " chosen for transaction")
                 seller_peer_id = seller["seller"]["id"]
+                print("[DEBUG] seller peer id: ", seller_peer_id)
                 # TODO: change product count according to buyer needs
-                self.seller_information[seller_peer_id]["product_count"] -= 1
-                with open("seller_information.json","w") as sell:
-                    json.dump(self.seller_information,sell)
-                tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"completed":False}
-                self.put_log(tlog,transactions_file,False,True)
-                
+                try:
+                    self.seller_information[seller_peer_id]["product_count"] -= 1
+                    with open("seller_information.json","w") as sell:
+                        json.dump(self.seller_information,sell)
+                    tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"completed":False}
+                    self.put_log(tlog,transactions_file,False,True)
+                except Exception as e:
+                    print("[DEBUG] error in updating transaction information: ", e)
                 
                 # seller's information should update
                 with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as neighbor:
+                        print("updating seller information")
                         neighbor.transaction(item,buyer_info["id"],seller_peer_id,self.id,False)
 
                 tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"completed":True}
@@ -421,6 +506,21 @@ class Peer(Thread):
                 self.buy_request_done = True
                 self.buy_request_semaphore.release()
 
+            self.product_sem.acquire()
+            self.product_name = self.products[random.randint(0, len(self.products)-1)]
+            print(datetime.datetime.now(), self.id, " now buying ", self.product_name)
+            self.product_sem.release()
+
+    @Pyro5.server.expose
+    def register_products(self,seller_info):
+        self.storage_semaphore.acquire()
+        peer_id = seller_info["seller"]["id"]
+        self.seller_information[peer_id] = seller_info
+
+        with open("seller_information.json","w") as sell:
+            json.dump(self.seller_information,sell)
+        self.storage_semaphore.release()
+    
     @Pyro5.server.expose
     def load_state(self):
         if os.path.exists("seller_information.json"):
@@ -444,47 +544,8 @@ class Peer(Thread):
             json.dump(self.transaction_information,transact)
         self.transaction_semaphore.release()
 
-    # @Pyro5.server.expose
-    # def startElection(self,first):
+def exit_handler():
+    os.remove("seller_information.json")
+    os.remove("transactions.json")
 
-    @Pyro5.server.expose
-    def startElection(self,first):
-        # if not first and not buy_request_done:
-        #     self.buy_request_semaphore.release()
-
-        ## TODO: IMP Remove this logic of deducing bully id from id
-        ## TODO: bully ids are randomized at the start of trading process for each peer
-        ## TODO: come up with a remote attribute accessible method to compare neighbor's peer ids
-        neighbor_ids = [int(x[-1]) for x in self.neighbors]
-        # neighbor_ids = []
-        # for x in self.neighbors:
-        #     with Pyro5.api.Proxy(self.neighbors[ng]) as neighbor:
-        #         neighbor_ids.append(neighbor.bully_id)
-        neighbor_ids = np.array(neighbor_ids)
-        greater_x = len(neighbor_ids[neighbor_ids > self.bully_id])
-        # if geater bully id is found, then send message to all neighbors
-        if greater_x > 0:
-            self.recvWon = False
-            self.recvOK = False
-            for ng in self.neighbors:
-                if int(ng[-1]) > self.bully_id:
-                    if self.trader != [] and int(ng[-1]) == self.trader[0]["bully_id"]:
-                        continue
-                    else:
-                        with Pyro5.api.Proxy(self.neighbors[ng]) as neighbor:
-                            neighbor.election_message("Election",{"bully_id":self.bully_id,"id":self.id})
-            time.sleep(2)
-            # if peer doesn't receive any OK or Won message, it is the coordinator
-            self.won_sem.acquire()
-            if self.recvOK == False and self.recvWon == False:
-                self.sendWon = True
-                # semaphore is released in the sendWonMessage method
-                self.sendWonMessage()
-            else:
-                self.won_sem.release()
-        # if no greater bully id is found, it is the coordinator
-        else:
-            self.won_sem.acquire()
-            self.sendWon = True
-            # semaphore is released in the sendWonMessage method
-            self.sendWonMessage()
+atexit.register(exit_handler)
