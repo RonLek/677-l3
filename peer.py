@@ -1,16 +1,16 @@
 # class to implement a peer - can be a buyer or a seller
+import atexit
+from concurrent.futures import ThreadPoolExecutor
+import datetime
+import json
+import numpy as np
+import os.path
 import Pyro5.server
 import Pyro5.api
-from concurrent.futures import ThreadPoolExecutor
-from threading import Thread, Lock, BoundedSemaphore
-import datetime
-import time
 import random
 import re
-import numpy as np
-import json
-import os.path
-import atexit
+from threading import Thread, Lock, BoundedSemaphore
+import time
 
 
 # import threading as td

@@ -1,8 +1,8 @@
 from peer import Peer
-from threading import Thread
 import Pyro5
 import random
 import sys
+from threading import Thread
 import time
 
 def get_peers():
