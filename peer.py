@@ -60,7 +60,7 @@ class Peer(Thread):
         # to store previous role when elected to trader
         self.prev_role = ""
 
-        self.price = random.randint(0,10)
+        self.price = random.randint(1,10)
         # for trader
         self.seller_information = {}
         self.transaction_information = {}
@@ -373,9 +373,9 @@ class Peer(Thread):
             with open("transactions.json","r") as transact:
                 data = json.load(transact)
                 for k in data.keys():
-                    with Pyro5.api.Proxy(self.neighbors[k]) as neighbor:
-                        self.executor.submit(self.trading_lookup, neighbor.tradingMessage(), neighbor.productName())
-
+                    if k != self.id:
+                        with Pyro5.api.Proxy(self.neighbors[k]) as neighbor:
+                            self.executor.submit(self.trading_lookup, neighbor.tradingMessage(), neighbor.productName())
 
         # Register seller products with the coordinator
         print(datetime.datetime.now(), "sellers register products with trader")
@@ -521,15 +521,13 @@ class Peer(Thread):
                 # when there is atleast one seller which can help in this request, use that seller
                 else:
                     seller = found_seller
-                    print("[DEBUG] seller: ", seller, " chosen for transaction")
+                    # print("[DEBUG] seller: ", seller, " chosen for transaction")
                     seller_peer_id = seller["seller"]["id"]
-                    print("[DEBUG] seller peer id: ", seller_peer_id)
+                    print("seller with peer id ", seller_peer_id, " chosen for transactions")
                     # Add seller to the transaction log along with buyers interested in buying from it
                     # Update the trader's seller information to update the selected seller's transaction and its amount
                     # and save it to saved transactions file
                     try:
-                        print(self.seller_information)
-                        
                         self.seller_information[seller_peer_id]["product_count"] -= item_count
                         self.seller_information[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
                         self.seller_information[seller_peer_id]["buyer_list"].append(buyer_info["id"])
@@ -590,6 +588,8 @@ class Peer(Thread):
             if max_key == buyer_info["id"]:
                 self.product_count -= item_cnt
                 self.seller_amount += item_cnt*self.price
+                print(datetime.datetime.now(),self.id," sold ",item_cnt," ",product_name," to ",buyer_info["id"]," for ",item_cnt*self.price)
+                print(datetime.datetime.now(),self.id," seller amount = ",self.seller_amount)
                 if self.product_count == 0:
                     self.product_name = self.products[random.randint(0, len(self.products)-1)]
                     self.product_count = 3
