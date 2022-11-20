@@ -391,7 +391,6 @@ class Peer(Thread):
                 for neighbor_name in self.neighbors:
                     with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
                         if "buyer" in neighbor_name:
-                            print('within if')
                             buyer_product_count = random.randint(1,4)
                             self.executor.submit(self.trading_lookup, neighbor.tradingMessage(), neighbor.productName(),buyer_product_count)
                     if self.role != "trader":
@@ -598,7 +597,6 @@ class Peer(Thread):
                     with Pyro5.api.Proxy(self.neighbors[self.trader[0]['id']]) as neighbor:
                         neighbor.register_products({"seller":{"bully_id":self.bully_id,"id":self.id},"product_name": self.product_name,"product_count":self.product_count,"product_price":self.price,"seller_amount":self.seller_amount})
         elif self.role == "buyer":
-            print("inside buyer")
             if buyer_success:
                 print("**********")
                 print(datetime.datetime.now(),self.id," bought item ",product_name, " from seller ",seller_id," for price ",sell_price)
