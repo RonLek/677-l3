@@ -404,7 +404,7 @@ class Peer(Thread):
         print("sellers register products with trader")
         for neighbor_name in self.neighbors:
             with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
-                if neighbor_name[:-1] == "seller":
+                if "seller" in neighbor_name:
                     neighbor.startTrading()
 
         print("buyers start trading on threads")
@@ -413,7 +413,7 @@ class Peer(Thread):
                 print(self.neighbors)
                 for neighbor_name in self.neighbors:
                     with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
-                        if neighbor_name[:-1] == "buyer":
+                        if "buyer" in neighbor_name:
                             print('within if')
                             self.executor.submit(self.trading_lookup, neighbor.tradingMessage(), neighbor.productName())
                     if self.role != "trader":
