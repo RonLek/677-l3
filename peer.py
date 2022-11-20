@@ -85,7 +85,7 @@ class Peer(Thread):
         self.product_sem = BoundedSemaphore(1)
 
         self.clock_sem = BoundedSemaphore(1)
-        self.clock = 0
+        self.clock = 0 + int(self.id[-1]) / 10.0
         self.buyer_list = [] # only for seller
 
     def get_random_neighbors(self):
@@ -450,7 +450,7 @@ class Peer(Thread):
 
     @Pyro5.server.expose
     def adjustClockValue(self, other):
-        self.clock = max(self.clock, other) + 1
+        self.clock = max(int(self.clock), int(other)) + 1 + int(self.id[-1]) / 10.0
 
     @Pyro5.server.expose
     def forwardClockValue(self):
@@ -504,7 +504,8 @@ class Peer(Thread):
                 try:
                     self.seller_information[seller_peer_id]["product_count"] -= 1
                     self.seller_information[seller_peer_id]["buyer_list"].append(buyer_info["id"])
-                    self.buyer_list.append(buyer_info["id"])
+                    with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as seller:
+                        seller.addBuyer(buyer_info["id"])
                     with open("seller_information.json","w") as sell:
                         json.dump(self.seller_information,sell)
                     tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"completed":False}
@@ -529,6 +530,10 @@ class Peer(Thread):
         self.fail_sem.release()
 
     @Pyro5.server.expose
+    def addBuyer(self, buyer_id):
+        self.buyer_list.append(buyer_id)
+
+    @Pyro5.server.expose
     def transaction(self,product_name,buyer_info,seller_id,trader_id,buyer_success):
         if self.role == "seller" and self.product_name == product_name:
             print(datetime.datetime.now(),self.id," received request from trader ",trader_id," for item ",product_name)
@@ -542,10 +547,12 @@ class Peer(Thread):
             max_key = max(buyer_clocks, key=buyer_clocks.get)
             print("[DEBUG] buyer with max clock: ", buyer_clocks[max_key])
             if max_key == buyer_info["id"]:
+                print("within max key condition")
                 self.product_count -= 1
                 if self.product_count == 0:
                     self.product_name = self.products[random.randint(0, len(self.products)-1)]
                     self.product_count = 3
+                    self.buyer_list.clear()
                     with Pyro5.api.Proxy(self.neighbors[self.trader[0]['id']]) as neighbor:
                         neighbor.register_products({"seller":{"bully_id":self.bully_id,"id":self.id},"product_name": self.product_name,"product_count":self.product_count})
 
