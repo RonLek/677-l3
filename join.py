@@ -46,7 +46,9 @@ def get_peers():
 
 
 if __name__ == "__main__":
-
+    if len(sys.argv) != 3:
+        print("Incorrect number of arguments, the correct command is python3 join.py localhost number_of_arguments")
+        sys.exit()
     peers = get_peers()
 
     time.sleep(2)
