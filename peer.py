@@ -67,12 +67,16 @@ class Peer(Thread):
         # to store previous role when elected to trader
         self.prev_role = ""
 
+        self.price = random.randint(0,10)
         # for trader
         self.seller_information = {}
         self.transaction_information = {}
         self.storage_semaphore = BoundedSemaphore(1)
         self.transaction_semaphore = BoundedSemaphore(1)
 
+        # for seller
+        self.seller_amount = 0
+        
         # for failure condition on buyers
         self.buy_request_done = False
         self.reset_semaphore = BoundedSemaphore(1)
@@ -351,7 +355,7 @@ class Peer(Thread):
             # with self.trader[0]['id']
             print(datetime.datetime.now(),self.id," is registering its market for ",self.product_name)
             with Pyro5.api.Proxy(self.neighbors[self.trader[0]['id']]) as neighbor:
-                neighbor.register_products({"seller":{"bully_id":self.bully_id,"id":self.id},"product_name": self.product_name,"product_count":self.product_count})
+                neighbor.register_products({"seller":{"bully_id":self.bully_id,"id":self.id},"product_name": self.product_name,"product_count":self.product_count,"product_price":self.price,"seller_amount":self.seller_amount})
         
         # elif self.role == "buyer":
         #     #TODO: remove the hardcoded 6 value
@@ -502,10 +506,11 @@ class Peer(Thread):
                 print("[DEBUG] seller peer id: ", seller_peer_id)
                 # TODO: change product count according to buyer needs
                 try:
+                    print(self.seller_information)
                     self.seller_information[seller_peer_id]["product_count"] -= 1
-                    self.seller_information[seller_peer_id]["buyer_list"].append(buyer_info["id"])
-                    with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as seller:
-                        seller.addBuyer(buyer_info["id"])
+                    self.seller_information[seller_peer_id]["seller_amount"] += 1*seller['product_price']
+                    with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as seller_add:
+                        seller_add.addBuyer(buyer_info["id"])
                     with open("seller_information.json","w") as sell:
                         json.dump(self.seller_information,sell)
                     tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"completed":False}
@@ -516,16 +521,18 @@ class Peer(Thread):
                 # seller's information should update
                 with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as neighbor:
                         print("updating seller information")
-                        neighbor.transaction(item,buyer_info, seller_peer_id,self.id,False)
+                        neighbor.transaction(item,buyer_info, seller_peer_id,self.id,False,0)
 
                 tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"completed":True}
                 self.put_log(tlog,transactions_file,True,True)
                 # buyer should let know the success
                 with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
-                        neighbor.transaction(item,buyer_info, seller_peer_id,self.id,True)
+                        print("Start of transaction of buyer")
+                        print(seller)
+                        neighbor.transaction(item,buyer_info, seller_peer_id,self.id,True,seller['product_price'])
             else:
                 with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
-                        neighbor.transaction(item,buyer_info["id"],"",self.id,False)
+                        neighbor.transaction(item,buyer_info["id"],"",self.id,False,0)
                         self.put_log(tlog,transactions_file,True,False)
         self.fail_sem.release()
 
@@ -534,7 +541,7 @@ class Peer(Thread):
         self.buyer_list.append(buyer_id)
 
     @Pyro5.server.expose
-    def transaction(self,product_name,buyer_info,seller_id,trader_id,buyer_success):
+    def transaction(self,product_name,buyer_info,seller_id,trader_id,buyer_success,sell_success):
         if self.role == "seller" and self.product_name == product_name:
             print(datetime.datetime.now(),self.id," received request from trader ",trader_id," for item ",product_name)
             buyer_clocks = {}
@@ -549,16 +556,18 @@ class Peer(Thread):
             if max_key == buyer_info["id"]:
                 print("within max key condition")
                 self.product_count -= 1
+                self.seller_amount += 1*self.price
                 if self.product_count == 0:
                     self.product_name = self.products[random.randint(0, len(self.products)-1)]
                     self.product_count = 3
                     self.buyer_list.clear()
                     with Pyro5.api.Proxy(self.neighbors[self.trader[0]['id']]) as neighbor:
-                        neighbor.register_products({"seller":{"bully_id":self.bully_id,"id":self.id},"product_name": self.product_name,"product_count":self.product_count})
-
+                        neighbor.register_products({"seller":{"bully_id":self.bully_id,"id":self.id},"product_name": self.product_name,"product_count":self.product_count,"product_price":self.price,"seller_amount":self.seller_amount})
+                print("end of max key")
         elif self.role == "buyer":
+            print("inside buyer")
             if buyer_success:
-                print(datetime.datetime.now(),self.id," has got the item ",product_name)
+                print(datetime.datetime.now(),self.id," has got the item ",product_name," for price ",sell_success)
                 self.buy_request_semaphore.acquire()
                 self.buy_request_done = True
                 self.buy_request_semaphore.release()
