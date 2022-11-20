@@ -549,7 +549,7 @@ class Peer(Thread):
                 # seller's information should update
                 with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as neighbor:
                         print("updating seller information")
-                        neighbor.transaction(item,buyer_info, seller_peer_id,self.id,False,0,item_count)
+                        neighbor.transaction(item,buyer_info, seller_peer_id,self.id,False,False,0,item_count)
 
                 tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"completed":True}
                 self.put_log(tlog,transactions_file,True,True)
@@ -557,7 +557,7 @@ class Peer(Thread):
                 with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
                         print("Start of transaction of buyer")
                         print(seller)
-                        neighbor.transaction(item,buyer_info, seller_peer_id,self.id,True,seller['product_price',item_count])
+                        neighbor.transaction(item,buyer_info, seller_peer_id,self.id,True,False,seller['product_price'],item_count)
             else:
                 with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
                         neighbor.transaction(item,buyer_info["id"],"",self.id,False,False,0,item_count)
