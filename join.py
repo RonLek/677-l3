@@ -1,16 +1,15 @@
 from peer import Peer
-from threading import Thread
 import Pyro5
 import random
 import sys
+from threading import Thread
 import time
 
 def get_peers():
-    # TODO: Make N dynamic (from the command line)
-    n_peers = 6
-    n_items = 10
-    max_neighbors = 3
-    hopcount = 3
+    n_peers = int(sys.argv[2])
+    n_items = 5
+    # max_neighbors = 3
+    # hopcount = 3
     roles = ['buyer', 'seller']
     products = ['fish', 'salt', 'boar']
     ns_name = sys.argv[1]
@@ -28,26 +27,28 @@ def get_peers():
     # ensures at least 1 seller
     role = 'seller'
     id = role + str(n_peers-2)
-    peers.append(Peer(id, n_peers-2,role, n_items, products, ns_name, max_neighbors, hopcount))
+    peers.append(Peer(id, n_peers-2,role, n_items, products, ns_name))
 
     # ensures at least 1 buyer
     role = 'buyer'
     id = role + str(n_peers-1)
-    peers.append(Peer(id, n_peers-1, role, n_items, products, ns_name, max_neighbors, hopcount))
+    peers.append(Peer(id, n_peers-1, role, n_items, products, ns_name))
 
     # add n_peers-2 buyers and sellers
     for i in range(n_peers - 2):
         # random assignment of roles
         role = roles[random.randint(0,len(roles) - 1)]
         id = role + str(i)
-        peer = Peer(id, i, role, n_items, products, ns_name, max_neighbors, hopcount)
+        peer = Peer(id, i, role, n_items, products, ns_name)
         peers.append(peer)
 
     return peers
 
 
 if __name__ == "__main__":
-
+    if len(sys.argv) != 3:
+        print("Incorrect number of arguments, the correct command is python3 join.py localhost number_of_arguments")
+        sys.exit()
     peers = get_peers()
 
     time.sleep(2)
