@@ -6,8 +6,7 @@ import sys
 import time
 
 def get_peers():
-    # TODO: Make N dynamic (from the command line)
-    n_peers = 6
+    n_peers = int(sys.argv[2])
     n_items = 5
     max_neighbors = 3
     hopcount = 3
