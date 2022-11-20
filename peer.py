@@ -509,6 +509,7 @@ class Peer(Thread):
                     print(self.seller_information)
                     self.seller_information[seller_peer_id]["product_count"] -= 1
                     self.seller_information[seller_peer_id]["seller_amount"] += 1*seller['product_price']
+                    self.seller_information[seller_peer_id]["buyer_list"].append(buyer_info["id"])
                     with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as seller_add:
                         seller_add.addBuyer(buyer_info["id"])
                     with open("seller_information.json","w") as sell:
