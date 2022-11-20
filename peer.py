@@ -472,9 +472,8 @@ class Peer(Thread):
         print("in the trading lookup")
         self.fail_sem.acquire()
         print("within trading lookup", self.role)
-        var_trader = self.role == "trader"
-        
-        if var_trader:
+
+        if self.role == "trader":
             print(datetime.datetime.now(),"trader ",self.id," received request from buyer ",buyer_info["id"], "for product ",item,"(",item_count,")")
             sellers = []
             transactions_file = "transactions.json"
