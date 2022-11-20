@@ -364,13 +364,13 @@ class Peer(Thread):
 
         print(datetime.datetime.now(), "coordinator notified all neighbors.")
 
-        # if os.path.exists("transactions.json"):
-        #     print("completing previous transactions")
-        #     with open("transactions.json","r") as transact:
-        #         data = json.load(transact)
-        #         for k in data.keys():
-        #             with Pyro5.api.Proxy(self.neighbors[k]) as neighbor:
-        #                 self.executor.submit(self.trading_lookup, neighbor.tradingMessage(), neighbor.productName())
+        if os.path.exists("transactions.json"):
+            print(datetime.datetime.now(), "completing previous transactions")
+            with open("transactions.json","r") as transact:
+                data = json.load(transact)
+                for k in data.keys():
+                    with Pyro5.api.Proxy(self.neighbors[k]) as neighbor:
+                        self.executor.submit(self.trading_lookup, neighbor.tradingMessage(), neighbor.productName())
 
 
         # Register seller products with the coordinator
