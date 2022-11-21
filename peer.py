@@ -50,9 +50,6 @@ class Peer(Thread):
         self.role = role
         self.ns = self.get_nameserver(hostname)
         self.executor = ThreadPoolExecutor(max_workers=10)
-        self.seller_list_lock = Lock()
-        self.product_count_lock = Lock()
-        self.seller_list = []
         # to store previous role when elected to trader
         self.prev_role = ""
 
@@ -68,7 +65,6 @@ class Peer(Thread):
         
         # for failure condition on buyers
         self.buy_request_done = False
-        self.reset_semaphore = BoundedSemaphore(1)
         self.buy_request_semaphore = BoundedSemaphore(1)
         self.fail_sem = BoundedSemaphore(1)
         self.sendWon = False
@@ -464,7 +460,7 @@ class Peer(Thread):
         self.fail_sem.acquire()
 
         if self.role == "trader":
-            print(datetime.datetime.now(),"trader ",self.id," received request from buyer ",buyer_info["id"], "for product ",item,"(",item_count,")")
+            print(datetime.datetime.now(),"trader ",self.id," received request from buyer ",buyer_info["id"], "for product ",item,"("+str(item_count)+")")
             sellers = []
             transactions_file = "transactions.json"
             # Save current incomplete transaction to a file for recovery
