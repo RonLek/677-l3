@@ -11,10 +11,6 @@ import random
 import re
 from threading import Thread, Lock, BoundedSemaphore
 import time
-
-
-# import threading as td
-
 class Peer(Thread):
     """
     The Peer class represents a buyer or a seller within the P2P network.
