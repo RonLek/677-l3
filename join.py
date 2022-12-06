@@ -8,12 +8,15 @@ import time
 def get_peers():
     n_peers = int(sys.argv[2])
     n_items = 5
+    n_traders = 2
+    product_time = 3
     # max_neighbors = 3
     # hopcount = 3
     roles = ['buyer', 'seller']
     products = ['fish', 'salt', 'boar']
     ns_name = sys.argv[1]
     peers = []
+    with_cache = True
     
     # Starts name server
     try:
@@ -27,20 +30,22 @@ def get_peers():
     # ensures at least 1 seller
     role = 'seller'
     id = role + str(n_peers-2)
-    peers.append(Peer(id, n_peers-2,role, n_items, products, ns_name))
+    peers.append(Peer(id, n_peers-2,role, n_items, product_time, products, ns_name, n_traders, with_cache))
 
     # ensures at least 1 buyer
     role = 'buyer'
     id = role + str(n_peers-1)
-    peers.append(Peer(id, n_peers-1, role, n_items, products, ns_name))
+    peers.append(Peer(id, n_peers-1, role, n_items, product_time, products, ns_name, n_traders, with_cache))
 
     # add n_peers-2 buyers and sellers
     for i in range(n_peers - 2):
         # random assignment of roles
         role = roles[random.randint(0,len(roles) - 1)]
         id = role + str(i)
-        peer = Peer(id, i, role, n_items, products, ns_name)
+        peer = Peer(id, i, role, n_items, product_time, products, ns_name, n_traders, with_cache)
         peers.append(peer)
+
+    # peers.append(Peer('server', -1, 'server', n_items, product_time, products, ns_name, n_traders, with_cache))
 
     return peers
 
