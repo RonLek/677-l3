@@ -24,7 +24,7 @@ class Peer(Thread):
     6. run - Starts the market simulation
     """
 
-    def __init__(self, id, bully_id, role, product_count, product_time, products, hostname, n_traders, with_cache):
+    def __init__(self, id, bully_id, role, product_count, product_time, products, hostname, n_traders, with_cache,fault_tolerance_heartbeat,heartbeat_timeout):
         """
         Construct a new 'Peer' object.
 
@@ -66,6 +66,8 @@ class Peer(Thread):
         self.n_traders = n_traders
 
         self.heartbeat_status = True
+        self.fault_tolerance_heartbeat = fault_tolerance_heartbeat
+        self.heartbeat_timeout = heartbeat_timeout
 
         # for seller
         self.seller_amount = 0
@@ -192,13 +194,14 @@ class Peer(Thread):
                             neighbor.setTrader(traders)
                     self.setTrader(traders)
                     
-                    for i,trader in enumerate(self.trader):
-                        # if i == 1:
-                        with Pyro5.api.Proxy(self.neighbors[trader]) as neighbor:
-                            neighbor.startTrading(i)
-                    if self.role == "trader":
-                        # traders.append(self.id)
-                        self.startTrading(1)
+                    if self.fault_tolerance_heartbeat:
+                        for i,trader in enumerate(self.trader):
+                            # if i == 1:
+                            with Pyro5.api.Proxy(self.neighbors[trader]) as neighbor:
+                                neighbor.startTrading(i)
+                        if self.role == "trader":
+                            # traders.append(self.id)
+                            self.startTrading(1)
 
   
 
@@ -437,7 +440,7 @@ class Peer(Thread):
             #     print(other_trader)
             #     print(neighbor)
             if fail_one == 1:
-                self.executor.submit(self.retire_with_time,20)
+                self.executor.submit(self.retire_with_time,self.heartbeat_timeout)
             self.executor.submit(self.ping_message, other_trader)
             # pass
 

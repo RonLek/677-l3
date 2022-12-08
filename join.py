@@ -17,7 +17,12 @@ def get_peers():
     ns_name = sys.argv[1]
     peers = []
     with_cache = True
-    
+    if sys.argv[3] == "true":
+        fault_tolerance_heartbeat = True
+        heartbeat_timeout = int(sys.argv[4])
+    elif sys.argv[3] == "false":
+        fault_tolerance_heartbeat = False
+        heartbeat_timeout = 0
     # Starts name server
     try:
         ns = Pyro5.api.locate_ns()
@@ -30,19 +35,19 @@ def get_peers():
     # ensures at least 1 seller
     role = 'seller'
     id = role + str(n_peers-2)
-    peers.append(Peer(id, n_peers-2,role, n_items, product_time, products, ns_name, n_traders, with_cache))
+    peers.append(Peer(id, n_peers-2,role, n_items, product_time, products, ns_name, n_traders, with_cache,fault_tolerance_heartbeat,heartbeat_timeout))
 
     # ensures at least 1 buyer
     role = 'buyer'
     id = role + str(n_peers-1)
-    peers.append(Peer(id, n_peers-1, role, n_items, product_time, products, ns_name, n_traders, with_cache))
+    peers.append(Peer(id, n_peers-1, role, n_items, product_time, products, ns_name, n_traders, with_cache,fault_tolerance_heartbeat,heartbeat_timeout))
 
     # add n_peers-2 buyers and sellers
     for i in range(n_peers - 2):
         # random assignment of roles
         role = roles[random.randint(0,len(roles) - 1)]
         id = role + str(i)
-        peer = Peer(id, i, role, n_items, product_time, products, ns_name, n_traders, with_cache)
+        peer = Peer(id, i, role, n_items, product_time, products, ns_name, n_traders, with_cache,fault_tolerance_heartbeat,heartbeat_timeout)
         peers.append(peer)
 
     # peers.append(Peer('server', -1, 'server', n_items, product_time, products, ns_name, n_traders, with_cache))
@@ -51,7 +56,7 @@ def get_peers():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 5:
         print("Incorrect number of arguments, the correct command is python3 join.py localhost number_of_arguments")
         sys.exit()
     peers = get_peers()
