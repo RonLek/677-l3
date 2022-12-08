@@ -548,7 +548,7 @@ class Peer(Thread):
 
         if self.role == "trader":
             print(datetime.datetime.now(),"trader ",self.id," received request from buyer ",buyer_info["id"], "for product ",item,"("+str(item_count)+")")
-            transactions_file = "transactions.json"
+            transactions_file = "transactions_trader_"+str(self.trader.index(self.id))+".json"
             # Save current incomplete transaction to a file for recovery
             tlog = {"buyer":buyer_info["id"],"seller":"_","product":item,"completed":False}
             self.put_log(tlog,transactions_file,False,True)
@@ -764,7 +764,8 @@ def exit_handler():
     :return: nothing
     """
     os.remove("seller_information.json")
-    os.remove("transactions.json")
+    os.remove("transactions_trader_0.json")
+    os.remove("transactions_trader_1.json")
 
 # Uncomment while debugging to remove the seller and transaction files
 atexit.register(exit_handler)
