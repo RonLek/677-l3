@@ -10,9 +10,10 @@ import Pyro5.api
 import random
 import re
 import glob
-from threading import Thread, Lock, BoundedSemaphore
+from threading import BoundedSemaphore
+from multiprocessing import Process
 import time
-class Peer(Thread):
+class Peer(Process):
     """
     The Peer class represents a buyer or a seller within the P2P network.
     It has the following methods:
@@ -36,8 +37,7 @@ class Peer(Thread):
         :param hostname: The hostname of the peer
         :return: returns nothing
         """
-
-        Thread.__init__(self)
+        Process.__init__(self)
         self.id = id
         self.bully_id = bully_id
         self.hostname = hostname
@@ -49,7 +49,6 @@ class Peer(Thread):
         self.n = product_count
         self.product_count = product_count
         self.product_time = product_time
-        self.role = role
         self.ns = self.get_nameserver(hostname)
         self.executor = ThreadPoolExecutor(max_workers=10)
         self.with_cache = with_cache
@@ -94,7 +93,7 @@ class Peer(Thread):
         """
         neighbor_list = []
         ns_dict = self.ns.list()
-        re_pattern = "seller[0-9]+|buyer[0-9]+"
+        re_pattern = "seller[0-9]+|buyer[0-9]+|server9"
 
         # Build a list of neighbors from the nameserver excluding the peer itself
         for id in ns_dict:
@@ -161,8 +160,10 @@ class Peer(Thread):
 
                 if self.role == "buyer":
                     print(datetime.datetime.now(), self.id, "joins to buy ", self.product_name, " with bully id ", self.bully_id)
-                else:
+                elif self.role == "seller":
                     print(datetime.datetime.now(), self.id, "joins to sell ", self.product_name, " with bully id ", self.bully_id)
+                else:
+                    print(datetime.datetime.now(), self.id, "joins as server process ")
 
                 # Peer starts listening for requests
                 self.executor.submit(daemon.requestLoop)
@@ -197,9 +198,9 @@ class Peer(Thread):
                     
                     if self.fault_tolerance_heartbeat:
                         for i,trader in enumerate(self.trader):
-                            # if i == 1:
-                            with Pyro5.api.Proxy(self.neighbors[trader]) as neighbor:
-                                neighbor.startTrading(i)
+                            if self.id != trader:
+                                with Pyro5.api.Proxy(self.neighbors[trader]) as neighbor:
+                                    neighbor.startTrading(i)
                         if self.role == "trader":
                             # traders.append(self.id)
                             self.startTrading(1)
@@ -610,6 +611,18 @@ class Peer(Thread):
         return self.clock
 
     @Pyro5.server.expose
+    def update_warehouse(self, seller_peer_id, item_count, buyer_info, seller):
+        data = {}
+        with open("seller_information.json") as sell:
+            data = json.load(sell)
+        with open("seller_information.json", "w") as sell:
+            data[seller_peer_id]["product_count"] -= item_count
+            data[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
+            data[seller_peer_id]["buyer_list"].append(buyer_info["id"])
+            print("data after buy", data)
+            json.dump(data,sell)
+
+    @Pyro5.server.expose
     def check_seller_in_cache(self, item, item_count):
         sellers = []
         found_seller = ''
@@ -668,11 +681,16 @@ class Peer(Thread):
 
             # Find sellers with the product
             print(self.seller_information)
-            sl, found = self.check_seller_in_cache(item,item_count)
+            sl = ''
+            found = False
+
+            if self.with_cache:
+                # Check if the seller is in the cache
+                sl, found = self.check_seller_in_cache(item,item_count)
 
             print("cache before ", found, sl, self.seller_information)
             # If not found in cache, load state and check again, avoids underselling
-            if not sl or not found and self.with_cache:
+            if not sl or not found:
                 self.load_state()
                 sl, found = self.check_seller_in_cache(item,item_count)
             
@@ -702,17 +720,11 @@ class Peer(Thread):
                         print("seller information after buy", self.seller_information)
                         with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as seller_add:
                             seller_add.addBuyer(buyer_info["id"])
-                        # self.storage_semaphore.acquire()
-                        data = {}
-                        with open("seller_information.json") as sell:
-                            data = json.load(sell)
-                        with open("seller_information.json", "w") as sell:
-                            data[seller_peer_id]["product_count"] -= item_count
-                            data[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
-                            data[seller_peer_id]["buyer_list"].append(buyer_info["id"])
-                            print("data after buy", data)
-                            json.dump(data,sell)
-                        # self.storage_semaphore.release()
+
+                        # Update transaction in warehouse
+                        with Pyro5.api.Proxy(self.neighbors["server9"]) as server:
+                            server.update_warehouse(seller_peer_id, item_count, buyer_info, seller)
+                        
                         tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"product_count":item_count,"completed":False}
                         self.put_log(tlog,transactions_file,False,True)
                     except Exception as e:
@@ -786,7 +798,7 @@ class Peer(Thread):
                         try:
                             self.seller_information[seller_peer_id]["product_count"] -= item_count
                             self.seller_information[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
-                            self.seller_information[seller_peer_id]["buyer_list"].append(buyer_info["id"])
+                            self.seller_information[seller_peer_id]["buyer_list"].append(buyer_info_id)
                             with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as seller_add:
                                 seller_add.addBuyer(buyer_info_id)
                             with open("seller_information.json","w") as sell:
@@ -916,6 +928,21 @@ class Peer(Thread):
         peer_id = seller_info["seller"]["id"]
         seller_info["buyer_list"] = []
 
+        
+        if peer_id in self.seller_information.keys():
+            self.seller_information[peer_id]["product_count"] += seller_info["product_count"]
+        else:
+            self.seller_information[peer_id] = seller_info
+        
+        print("seller_information = ", self.seller_information)
+
+        # update data in warehouse
+        with Pyro5.api.Proxy(self.neighbors["server9"]) as neighbor:
+            neighbor.register_products_with_warehouse(seller_info)
+
+    @Pyro5.server.expose
+    def register_products_with_warehouse(self, seller_info):
+        peer_id = seller_info["seller"]["id"]
         data = {}
         if os.path.exists("seller_information.json"):
             self.storage_semaphore.acquire()
@@ -931,17 +958,13 @@ class Peer(Thread):
             else:
                 data[peer_id] = seller_info
 
-            if peer_id in self.seller_information.keys():
-                self.seller_information[peer_id]["product_count"] += seller_info["product_count"]
-            else:
-                self.seller_information[peer_id] = seller_info
             json.dump(data,sell)
         self.storage_semaphore.release()
         print("data updated = ",data)
+    
         with open("seller_information.json") as sell:
             print("data in file = ",json.load(sell))
-        print("seller_information = ", self.seller_information)
-    
+
     @Pyro5.server.expose
     def load_state(self):
         """

@@ -50,7 +50,7 @@ def get_peers():
         peer = Peer(id, i, role, n_items, product_time, products, ns_name, n_traders, with_cache,fault_tolerance_heartbeat,heartbeat_timeout)
         peers.append(peer)
 
-    # peers.append(Peer('server', -1, 'server', n_items, product_time, products, ns_name, n_traders, with_cache))
+    peers.append(Peer('server9', -1, 'server', n_items, product_time, products, ns_name, n_traders, with_cache, fault_tolerance_heartbeat, heartbeat_timeout))
 
     return peers
 
