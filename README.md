@@ -15,10 +15,10 @@ The main library used to implement this distributed setting is `Pyro5` which is 
 The main command used to run this code is
 
 ```bash
-python3 join.py localhost <number_of_peers> [true/false] [timeout_in_sec]
+python3 join.py localhost <number_of_peers> [fault_tolerance_toggle] [timeout_in_sec]
 ```
 
-In this command line argument `<number_of_peers>` refers to the number of peers to be included in this bazaar. In addition the penultimate argument refers to toggling the fault tolerance situation in the bazaar. The input for this argument is "true"/"false". The last argument refers to the timeout value (in seconds) needed to fail one of the traders, should `fault_tolerance` flag is "true". In case of "false", this value should be set to 0. This file will generate two intermediate files `sellers_information.json` and `transactions.json` which helps in storing the state of the trader at every transaction and seller information change for reliable working of this distributed bazaar.
+In this command line argument `<number_of_peers>` refers to the number of peers to be included in this bazaar. In addition the penultimate argument (`fault_tolerance_toggle`) refers to toggling the fault tolerance situation in the bazaar. The input for this argument is "true"/"false". The last argument refers to the timeout value (in seconds) needed to fail one of the traders, should `fault_tolerance` flag is "true". In case of "false", this value should be set to 0. This file will generate two intermediate files `sellers_information.json` and `transactions.json` which helps in storing the state of the trader at every transaction and seller information change for reliable working of this distributed bazaar.
 
 ## Development
 
