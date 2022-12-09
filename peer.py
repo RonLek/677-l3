@@ -611,6 +611,18 @@ class Peer(Process):
         return self.clock
 
     @Pyro5.server.expose
+    def update_warehouse(self, seller_peer_id, item_count, buyer_info, seller):
+        data = {}
+        with open("seller_information.json") as sell:
+            data = json.load(sell)
+        with open("seller_information.json", "w") as sell:
+            data[seller_peer_id]["product_count"] -= item_count
+            data[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
+            data[seller_peer_id]["buyer_list"].append(buyer_info["id"])
+            print("data after buy", data)
+            json.dump(data,sell)
+
+    @Pyro5.server.expose
     def check_seller_in_cache(self, item, item_count):
         sellers = []
         found_seller = ''
@@ -708,17 +720,11 @@ class Peer(Process):
                         print("seller information after buy", self.seller_information)
                         with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as seller_add:
                             seller_add.addBuyer(buyer_info["id"])
-                        # self.storage_semaphore.acquire()
-                        data = {}
-                        with open("seller_information.json") as sell:
-                            data = json.load(sell)
-                        with open("seller_information.json", "w") as sell:
-                            data[seller_peer_id]["product_count"] -= item_count
-                            data[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
-                            data[seller_peer_id]["buyer_list"].append(buyer_info["id"])
-                            print("data after buy", data)
-                            json.dump(data,sell)
-                        # self.storage_semaphore.release()
+
+                        # Update transaction in warehouse
+                        with Pyro5.api.Proxy(self.neighbors["server9"]) as server:
+                            server.update_warehouse(seller_peer_id, item_count, buyer_info, seller)
+                        
                         tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"product_count":item_count,"completed":False}
                         self.put_log(tlog,transactions_file,False,True)
                     except Exception as e:
