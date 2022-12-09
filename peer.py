@@ -720,14 +720,14 @@ class Peer(Thread):
                     
                     # Choose a buyer and decrement the product count
                     with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as neighbor:
-                            neighbor.transaction(item,buyer_info, seller_peer_id,self.id,False,False,0,item_count)
+                            neighbor.transaction(item,buyer_info["id"], seller_peer_id,self.id,False,False,0,item_count)
 
                     tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"product_count":item_count,"completed":True}
                     self.put_log(tlog,transactions_file,True,True)
 
                     # Let buyer know that the transaction is complete
                     with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
-                            neighbor.transaction(item,buyer_info, seller_peer_id,self.id,True,False,seller['product_price'],item_count)
+                            neighbor.transaction(item,buyer_info["id"], seller_peer_id,self.id,True,False,seller['product_price'],item_count)
             else:
                 with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
                         neighbor.transaction(item,buyer_info["id"],"",self.id,False,False,0,item_count)
@@ -747,9 +747,13 @@ class Peer(Thread):
         # self.fail_sem.acquire()
 
         if self.role == "trader":
+            item = tlog["product"]
+            item_count = tlog["product_count"]
+            buyer_info_id = buyer_info_id
 
+            transactions_file = "transactions_trader_"+self.id+".json"
             if tlog["seller"] == "_" and not tlog["completed"]:
-                transactions_file = "transactions_trader_"+self.id+".json"
+                
                 self.put_log(tlog,transactions_file,False,True)
 
 
@@ -765,8 +769,8 @@ class Peer(Thread):
                 if found:
                     if not sl:
                         # When no seller can fulfill the demand, simply reject the buyer request from trader
-                        with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
-                                neighbor.transaction(item,buyer_info["id"],"",self.id,False,True,0,item_count)
+                        with Pyro5.api.Proxy(self.neighbors[buyer_info_id]) as neighbor:
+                                neighbor.transaction(item,buyer_info_id,"",self.id,False,True,0,item_count)
                                 self.put_log(tlog,transactions_file,True,False)
                                 self.fail_sem.release()
                                 return
@@ -784,33 +788,34 @@ class Peer(Thread):
                             self.seller_information[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
                             self.seller_information[seller_peer_id]["buyer_list"].append(buyer_info["id"])
                             with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as seller_add:
-                                seller_add.addBuyer(buyer_info["id"])
+                                seller_add.addBuyer(buyer_info_id)
                             with open("seller_information.json","w") as sell:
                                 data = json.load(sell)
                                 data[seller_peer_id]["product_count"] -= item_count
                                 data[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
-                                data[seller_peer_id]["buyer_list"].append(buyer_info["id"])
+                                data[seller_peer_id]["buyer_list"].append(buyer_info_id)
                                 json.dump(data,sell)
-                            tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"product_count":item_count,"completed":False}
+                            tlog = {"buyer":buyer_info_id,"seller":seller_peer_id,"product":item,"product_count":item_count,"completed":False}
                             self.put_log(tlog,transactions_file,False,True)
                         except Exception as e:
                             print("[DEBUG] error in updating transaction information: ", e)
                         
                         # Choose a buyer and decrement the product count
                         with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as neighbor:
-                                neighbor.transaction(item,buyer_info, seller_peer_id,self.id,False,False,0,item_count)
+                                neighbor.transaction(item,buyer_info_id, seller_peer_id,self.id,False,False,0,item_count)
 
-                        tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"product_count":item_count,"completed":True}
+                        tlog = {"buyer":buyer_info_id,"seller":seller_peer_id,"product":item,"product_count":item_count,"completed":True}
                         self.put_log(tlog,transactions_file,True,True)
 
                         # Let buyer know that the transaction is complete
-                        with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
-                                neighbor.transaction(item,buyer_info, seller_peer_id,self.id,True,False,seller['product_price'],item_count)
+                        with Pyro5.api.Proxy(self.neighbors[buyer_info_id]) as neighbor:
+                                neighbor.transaction(item,buyer_info_id, seller_peer_id,self.id,True,False,seller['product_price'],item_count)
                 else:
-                    with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
-                            neighbor.transaction(item,buyer_info["id"],"",self.id,False,False,0,item_count)
+                    with Pyro5.api.Proxy(self.neighbors[buyer_info_id]) as neighbor:
+                            neighbor.transaction(item,buyer_info_id,"",self.id,False,False,0,item_count)
                             self.put_log(tlog,transactions_file,True,False)
             elif tlog["seller"] != "_" and not tlog["completed"]:
+                seller_peer_id = tlog["seller"]
                 try:
                     # self.seller_information[seller_peer_id]["product_count"] -= item_count
                     # self.seller_information[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
@@ -826,21 +831,21 @@ class Peer(Thread):
                 
                 # Choose a buyer and decrement the product count
                 with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as neighbor:
-                        neighbor.transaction(item,buyer_info, seller_peer_id,self.id,False,False,0,item_count)
+                        neighbor.transaction(item,buyer_info_id, seller_peer_id,self.id,False,False,0,item_count)
 
-                tlog = {"buyer":buyer_info["id"],"seller":seller_peer_id,"product":item,"product_count":item_count,"completed":True}
+                tlog = {"buyer":buyer_info_id,"seller":seller_peer_id,"product":item,"product_count":item_count,"completed":True}
                 self.put_log(tlog,transactions_file,True,True)
 
                 # Let buyer know that the transaction is complete
-                with Pyro5.api.Proxy(self.neighbors[buyer_info["id"]]) as neighbor:
-                        neighbor.transaction(item,buyer_info, seller_peer_id,self.id,True,False,seller['product_price'],item_count)
+                with Pyro5.api.Proxy(self.neighbors[buyer_info_id]) as neighbor:
+                        neighbor.transaction(item,buyer_info_id, seller_peer_id,self.id,True,False,seller['product_price'],item_count)
 
     @Pyro5.server.expose
     def addBuyer(self, buyer_id):
         self.buyer_list.append(buyer_id)
 
     @Pyro5.server.expose
-    def transaction(self,product_name,buyer_info,seller_id,trader_id,buyer_success,insufficient,sell_price,item_cnt):
+    def transaction(self,product_name,buyer_info_id,seller_id,trader_id,buyer_success,insufficient,sell_price,item_cnt):
         """
         Complete the transaction at the buyer and seller
         :param product_name: product name
@@ -864,10 +869,10 @@ class Peer(Thread):
             max_key = max(buyer_clocks, key=buyer_clocks.get)
 
             # If the max_key buyer is the one who initiated the transaction, complete the transaction
-            if max_key == buyer_info["id"]:
+            if max_key == buyer_info_id:
                 # self.product_count -= item_cnt
                 self.seller_amount += item_cnt*self.price
-                print(datetime.datetime.now(),self.id," sold ",item_cnt," ",product_name," to ",buyer_info["id"]," for ",item_cnt*self.price)
+                print(datetime.datetime.now(),self.id," sold ",item_cnt," ",product_name," to ",buyer_info_id," for ",item_cnt*self.price)
                 print(datetime.datetime.now(),self.id," seller amount = ",self.seller_amount)
                 # if self.product_count == 0:
                 #     # self.product_name = self.products[random.randint(0, len(self.products)-1)]
