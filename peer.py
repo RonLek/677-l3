@@ -749,7 +749,7 @@ class Peer(Thread):
         if self.role == "trader":
             item = tlog["product"]
             item_count = tlog["product_count"]
-            buyer_info_id = buyer_info_id
+            buyer_info_id = tlog["buyer"]
 
             transactions_file = "transactions_trader_"+self.id+".json"
             if tlog["seller"] == "_" and not tlog["completed"]:
