@@ -33,8 +33,13 @@ class Peer(Process):
         :param bully_id: The bully id of the peer
         :param role: The role of the peer
         :param product_count: The maximum number of products the peer can sell (if role is seller)
+        :param product_time: The time after which sellers re-register their products
         :param products: The list of products that a peer can buy or sell
         :param hostname: The hostname of the peer
+        :param n_traders: The number of traders in the network
+        :param with_cache: Boolean to indicate whether traders should use cache or not
+        :param fault_tolerance_heartbeat: Boolean to indicate whether traders should use fault tolerance or not
+        :param heartbeat_timeout: The timeout for the heartbeat
         :return: returns nothing
         """
         Process.__init__(self)
@@ -169,7 +174,6 @@ class Peer(Process):
                 self.get_neighbors()
 
                 # Peer 0 elects nt traders
-                # TODO: Handle 
                 traders = []
                 if self.id[-1] == "0":
                     while len(traders) != self.n_traders:
@@ -187,6 +191,7 @@ class Peer(Process):
 
                     print(datetime.datetime.now(), "Traders selected are: ", traders)
 
+                    # set all traders for neighbors and self
                     for neighbor_name in self.neighbors:
                         with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
                             neighbor.setTrader(traders)
@@ -200,8 +205,6 @@ class Peer(Process):
                         if self.role == "trader":
                             # traders.append(self.id)
                             self.startTrading(1)
-
-  
 
                     while True:
                         # Peer 0 starts the market simulation
@@ -238,6 +241,10 @@ class Peer(Process):
 
     @Pyro5.server.expose
     def sendBuyRequest(self):
+        """
+        Send buy request to a random trader
+        :return: nothing
+        """
         # select a random trader
         trader = random.choice(self.trader)
         with Pyro5.api.Proxy(self.neighbors[trader]) as neighbor:
@@ -245,6 +252,11 @@ class Peer(Process):
 
     @Pyro5.server.expose
     def setTrader(self, traders):
+        """
+        Set the trader list
+        :param traders: The list of traders
+        :return: nothing
+        """
         self.trader = traders
 
     @Pyro5.server.expose
@@ -328,7 +340,6 @@ class Peer(Process):
             self.won_sem.acquire()
             self.recvWon = True
             self.won_sem.release()
-            # self.trader.clear() 
             self.trader.append(neighbor)
 
     @Pyro5.server.expose
@@ -339,6 +350,7 @@ class Peer(Process):
         """
 
         return self.role == "trader"
+
     @Pyro5.server.expose
     def isRetire(self):
         """
@@ -437,6 +449,12 @@ class Peer(Process):
 
     @Pyro5.server.expose
     def retire_with_time(self,ttl):
+        """
+        Retire from the market after a given time
+        :param ttl: time to live
+        :return: nothing
+        """
+
         time.sleep(ttl)
         with open("trader_" + self.id + ".txt","a+") as f:
             print(datetime.datetime.now(), self.id, " is retiring from the market", file=f)
@@ -444,27 +462,37 @@ class Peer(Process):
     
     @Pyro5.server.expose
     def ping_message(self,neighbor_id):
+        """
+        Send ping message to the other trader
+        :param neighbor_id: id of the other trader
+        :return: nothing
+        """
+
+        # Ping until the other trader is alive
         while self.role == "trader":
             self.heartbeat = False
             self.executor.submit(self.ping_send,neighbor_id)
-            # neighbor.ping_reply()
             time.sleep(10)
             with open("trader_" + self.id + ".txt","a+") as f:
                 print(datetime.datetime.now(), self.id," Heartbeat: ",self.heartbeat, file=f)
             if not self.heartbeat:
                 break
+
         if self.role == "trader":
             with open("trader_" + self.id + ".txt","a+") as f:
                 print(datetime.datetime.now(), "Found other trader ", neighbor_id, " to be dead", file=f)
             old_index_file = "transactions_trader_" + neighbor_id + ".json"
+            
             with open("trader_" + self.id + ".txt","a+") as f:
                 print(datetime.datetime.now(), "Found trasactions file for other trader: ", old_index_file, file=f)
             for neighbor_name in self.neighbors:
                 with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor_1:
                     neighbor_1.removeTrader(neighbor_id)
             self.removeTrader(neighbor_id)
+            
             with open("trader_" + self.id + ".txt","a+") as f:
                 print(datetime.datetime.now(), "Removed other trader from neighbors", file=f)
+            
             with open(old_index_file,"w") as transact:
                 with open("trader_" + self.id + ".txt","a+") as f:
                     print(datetime.datetime.now(), "Entering pending transactions of other trader", file=f)
@@ -477,10 +505,22 @@ class Peer(Process):
 
     @Pyro5.server.expose
     def removeTrader(self,neighbor_id):
+        """
+        Remove a trader from the list of neighbors
+        :param neighbor_id: id of the trader to be removed
+        :return: nothing
+        """
+        
         self.trader.remove(neighbor_id)
 
     @Pyro5.server.expose
     def ping_reply(self,neighbor_id):
+        """
+        Reply to a ping message
+        :param neighbor_id: id of the trader who sent the ping message
+        :return: nothing
+        """
+        
         if not self.isRetire():
             with open("trader_" + self.id + ".txt","a+") as f:
                 print(datetime.datetime.now(), "received ping from ", neighbor_id, file=f)
@@ -490,6 +530,12 @@ class Peer(Process):
 
     @Pyro5.server.expose
     def ping_send(self,neighbor_id):
+        """
+        Send a ping message to a trader
+        :param neighbor_id: id of the trader to whom the ping message is to be sent
+        :return: nothing
+        """
+        
         with Pyro5.api.Proxy(self.neighbors[neighbor_id]) as neighbor:
             x = neighbor.ping_reply(self.id)
         with open("trader_" + self.id + ".txt","a+") as f:
@@ -606,6 +652,13 @@ class Peer(Process):
 
     @Pyro5.server.expose
     def update_warehouse(self, seller_peer_id, item_count, buyer_info, seller):
+        """
+        Update warehouse information
+        :param seller_peer_id: seller peer id
+        :param item_count: item count
+        :param buyer_info: buyer information
+        :param seller: seller
+        """
         
         data = {}
         with open("seller_information.json") as sell:
@@ -620,6 +673,12 @@ class Peer(Process):
 
     @Pyro5.server.expose
     def check_seller_in_cache(self, item, item_count):
+        """
+        Check if seller is in cache
+        :param item: name of the item
+        :param item_count: count of the item
+        :return: seller, found
+        """
         with open ("trader_" + self.id + ".txt","a+") as f:
             print(datetime.datetime.now(), "Checking if item ", item, " is in cache", file = f)
         sellers = []
@@ -748,8 +807,6 @@ class Peer(Process):
         :param item_count number of items to buy
         :return: nothing
         """
-        # self.fail_sem.acquire()
-
         if self.role == "trader":
             item = tlog["product"]
             item_count = tlog["product_count"]
@@ -860,7 +917,6 @@ class Peer(Process):
 
             # If the max_key buyer is the one who initiated the transaction, complete the transaction
             if max_key == buyer_info_id:
-                # self.product_count -= item_cnt
                 print(datetime.datetime.now(),self.id," sold ",item_cnt," ",product_name," to ",buyer_info_id)
 
         elif self.role == "buyer":
@@ -910,6 +966,12 @@ class Peer(Process):
 
     @Pyro5.server.expose
     def register_products_with_warehouse(self, seller_info):
+        """
+        Register the seller information
+        :param seller_info: seller information
+        :return: nothing
+        """
+        
         peer_id = seller_info["seller"]["id"]
         data = {}
         if os.path.exists("seller_information.json"):
