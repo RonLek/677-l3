@@ -1,0 +1,276 @@
+2022-12-09 20:04:15.206282 Registered products with warehouse 
+2022-12-09 20:04:15.215560 Registered products with warehouse 
+2022-12-09 20:04:15.223979 Registered products with warehouse 
+2022-12-09 20:04:15.233836 No seller found for  salt
+2022-12-09 20:04:16.274768 Registered products with warehouse 
+2022-12-09 20:04:16.321660 Registered products with warehouse 
+2022-12-09 20:04:16.346280 Registered products with warehouse 
+2022-12-09 20:04:16.355795 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:17.382323 Registered products with warehouse 
+2022-12-09 20:04:17.420266 Registered products with warehouse 
+2022-12-09 20:04:17.428529 Registered products with warehouse 
+2022-12-09 20:04:17.434988 No seller found for  salt
+2022-12-09 20:04:18.448775 Registered products with warehouse 
+2022-12-09 20:04:18.470268 Registered products with warehouse 
+2022-12-09 20:04:18.493780 Registered products with warehouse 
+2022-12-09 20:04:18.500123 Found  boar  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:19.580885 Registered products with warehouse 
+2022-12-09 20:04:19.619180 Registered products with warehouse 
+2022-12-09 20:04:19.641999 Registered products with warehouse 
+2022-12-09 20:04:19.669334 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:04:20.734864 Registered products with warehouse 
+2022-12-09 20:04:20.761914 Registered products with warehouse 
+2022-12-09 20:04:20.793679 Registered products with warehouse 
+2022-12-09 20:04:20.804977 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:21.869295 Registered products with warehouse 
+2022-12-09 20:04:21.894241 Registered products with warehouse 
+2022-12-09 20:04:21.921227 Registered products with warehouse 
+2022-12-09 20:04:21.942399 No seller found for  salt
+2022-12-09 20:04:22.996474 Registered products with warehouse 
+2022-12-09 20:04:23.037013 Registered products with warehouse 
+2022-12-09 20:04:23.062998 Registered products with warehouse 
+2022-12-09 20:04:23.075832 No seller found for  salt
+2022-12-09 20:04:24.110463 Registered products with warehouse 
+2022-12-09 20:04:24.137444 Registered products with warehouse 
+2022-12-09 20:04:24.171414 Registered products with warehouse 
+2022-12-09 20:04:24.193729 Found  boar  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:25.258843 Registered products with warehouse 
+2022-12-09 20:04:25.283744 Registered products with warehouse 
+2022-12-09 20:04:25.312555 Registered products with warehouse 
+2022-12-09 20:04:25.333318 Found  boar  in warehouse. Informing trader  seller4
+2022-12-09 20:04:26.375859 Registered products with warehouse 
+2022-12-09 20:04:26.384028 Registered products with warehouse 
+2022-12-09 20:04:26.398159 Registered products with warehouse 
+2022-12-09 20:04:26.405875 Found  boar  in warehouse. Informing trader  seller4
+2022-12-09 20:04:27.439703 Registered products with warehouse 
+2022-12-09 20:04:27.447387 Registered products with warehouse 
+2022-12-09 20:04:27.454463 Registered products with warehouse 
+2022-12-09 20:04:27.460525 Found  boar  in warehouse. Informing trader  seller4
+2022-12-09 20:04:28.509775 Registered products with warehouse 
+2022-12-09 20:04:28.535364 Registered products with warehouse 
+2022-12-09 20:04:28.564815 Registered products with warehouse 
+2022-12-09 20:04:28.590357 No seller found for  salt
+2022-12-09 20:04:29.611577 Registered products with warehouse 
+2022-12-09 20:04:29.621656 Registered products with warehouse 
+2022-12-09 20:04:29.636737 Registered products with warehouse 
+2022-12-09 20:04:29.644938 No seller found for  salt
+2022-12-09 20:04:30.679798 Registered products with warehouse 
+2022-12-09 20:04:30.726655 Registered products with warehouse 
+2022-12-09 20:04:30.748283 Registered products with warehouse 
+2022-12-09 20:04:30.756363 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:04:31.798744 Registered products with warehouse 
+2022-12-09 20:04:31.808659 Registered products with warehouse 
+2022-12-09 20:04:31.817889 Registered products with warehouse 
+2022-12-09 20:04:31.826867 No seller found for  salt
+2022-12-09 20:04:32.845480 Registered products with warehouse 
+2022-12-09 20:04:32.858563 Registered products with warehouse 
+2022-12-09 20:04:32.874642 Registered products with warehouse 
+2022-12-09 20:04:32.884232 No seller found for  salt
+2022-12-09 20:04:33.947484 Registered products with warehouse 
+2022-12-09 20:04:33.986441 Registered products with warehouse 
+2022-12-09 20:04:34.005359 Registered products with warehouse 
+2022-12-09 20:04:34.012558 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:04:35.052326 Registered products with warehouse 
+2022-12-09 20:04:35.063455 Registered products with warehouse 
+2022-12-09 20:04:35.071184 Registered products with warehouse 
+2022-12-09 20:04:35.077237 Found  boar  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:36.155149 Registered products with warehouse 
+2022-12-09 20:04:36.183631 Registered products with warehouse 
+2022-12-09 20:04:36.193067 Registered products with warehouse 
+2022-12-09 20:04:36.207509 No seller found for  salt
+2022-12-09 20:04:37.282354 Registered products with warehouse 
+2022-12-09 20:04:37.324878 Registered products with warehouse 
+2022-12-09 20:04:37.340184 Registered products with warehouse 
+2022-12-09 20:04:37.350239 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:38.407296 Registered products with warehouse 
+2022-12-09 20:04:38.445340 Registered products with warehouse 
+2022-12-09 20:04:38.465130 Registered products with warehouse 
+2022-12-09 20:04:38.475763 No seller found for  salt
+2022-12-09 20:04:39.511890 Registered products with warehouse 
+2022-12-09 20:04:39.525467 Registered products with warehouse 
+2022-12-09 20:04:39.540038 Registered products with warehouse 
+2022-12-09 20:04:39.547102 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:40.611375 Registered products with warehouse 
+2022-12-09 20:04:40.661161 Registered products with warehouse 
+2022-12-09 20:04:40.678316 Registered products with warehouse 
+2022-12-09 20:04:40.687746 Found  boar  in warehouse. Informing trader  seller4
+2022-12-09 20:04:41.748375 Registered products with warehouse 
+2022-12-09 20:04:41.780623 Registered products with warehouse 
+2022-12-09 20:04:41.805868 Registered products with warehouse 
+2022-12-09 20:04:41.816568 Found  boar  in warehouse. Informing trader  seller4
+2022-12-09 20:04:42.875831 Registered products with warehouse 
+2022-12-09 20:04:42.909152 Registered products with warehouse 
+2022-12-09 20:04:42.937218 Registered products with warehouse 
+2022-12-09 20:04:42.950292 No seller found for  salt
+2022-12-09 20:04:44.052185 Registered products with warehouse 
+2022-12-09 20:04:44.076146 Registered products with warehouse 
+2022-12-09 20:04:44.088959 Registered products with warehouse 
+2022-12-09 20:04:44.095510 Found  boar  in warehouse. Informing trader  seller4
+2022-12-09 20:04:45.145615 Registered products with warehouse 
+2022-12-09 20:04:45.161407 Registered products with warehouse 
+2022-12-09 20:04:45.182178 Registered products with warehouse 
+2022-12-09 20:04:45.197897 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:04:46.319624 Registered products with warehouse 
+2022-12-09 20:04:46.374138 Registered products with warehouse 
+2022-12-09 20:04:46.397110 Registered products with warehouse 
+2022-12-09 20:04:46.404491 No seller found for  salt
+2022-12-09 20:04:47.458402 Registered products with warehouse 
+2022-12-09 20:04:47.478711 Registered products with warehouse 
+2022-12-09 20:04:47.493183 Registered products with warehouse 
+2022-12-09 20:04:47.502168 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:48.595467 Registered products with warehouse 
+2022-12-09 20:04:48.618506 Registered products with warehouse 
+2022-12-09 20:04:48.630723 Registered products with warehouse 
+2022-12-09 20:04:48.639404 Found  boar  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:49.728510 Registered products with warehouse 
+2022-12-09 20:04:49.771120 Registered products with warehouse 
+2022-12-09 20:04:49.785606 Registered products with warehouse 
+2022-12-09 20:04:49.795979 Found  boar  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:50.857420 Registered products with warehouse 
+2022-12-09 20:04:50.877506 Registered products with warehouse 
+2022-12-09 20:04:50.885594 Registered products with warehouse 
+2022-12-09 20:04:50.892763 No seller found for  salt
+2022-12-09 20:04:51.910393 Registered products with warehouse 
+2022-12-09 20:04:51.924533 Registered products with warehouse 
+2022-12-09 20:04:51.935658 Registered products with warehouse 
+2022-12-09 20:04:51.943070 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:04:52.996800 Registered products with warehouse 
+2022-12-09 20:04:53.013429 Registered products with warehouse 
+2022-12-09 20:04:53.025861 Registered products with warehouse 
+2022-12-09 20:04:53.034467 No seller found for  salt
+2022-12-09 20:04:54.086170 Registered products with warehouse 
+2022-12-09 20:04:54.124680 Registered products with warehouse 
+2022-12-09 20:04:54.149210 Registered products with warehouse 
+2022-12-09 20:04:54.164001 Found  boar  in warehouse. Informing trader  seller4
+2022-12-09 20:04:55.272673 Registered products with warehouse 
+2022-12-09 20:04:55.309226 Registered products with warehouse 
+2022-12-09 20:04:55.324882 Registered products with warehouse 
+2022-12-09 20:04:55.331823 No seller found for  salt
+2022-12-09 20:04:56.368246 Registered products with warehouse 
+2022-12-09 20:04:56.385235 Registered products with warehouse 
+2022-12-09 20:04:56.401628 Registered products with warehouse 
+2022-12-09 20:04:56.409901 No seller found for  salt
+2022-12-09 20:04:57.444057 Registered products with warehouse 
+2022-12-09 20:04:57.477371 Registered products with warehouse 
+2022-12-09 20:04:57.505874 Registered products with warehouse 
+2022-12-09 20:04:57.523034 Found  boar  in warehouse. Informing trader  seller4
+2022-12-09 20:04:58.580759 Registered products with warehouse 
+2022-12-09 20:04:58.624179 Registered products with warehouse 
+2022-12-09 20:04:58.631585 Registered products with warehouse 
+2022-12-09 20:04:58.637927 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:04:59.683458 Registered products with warehouse 
+2022-12-09 20:04:59.713244 Registered products with warehouse 
+2022-12-09 20:04:59.724187 Registered products with warehouse 
+2022-12-09 20:04:59.731591 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:05:00.809440 Registered products with warehouse 
+2022-12-09 20:05:00.851961 Registered products with warehouse 
+2022-12-09 20:05:00.890415 Registered products with warehouse 
+2022-12-09 20:05:00.903643 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:05:01.997677 Registered products with warehouse 
+2022-12-09 20:05:02.048365 Registered products with warehouse 
+2022-12-09 20:05:02.076642 Registered products with warehouse 
+2022-12-09 20:05:02.088555 No seller found for  salt
+2022-12-09 20:05:03.136969 Registered products with warehouse 
+2022-12-09 20:05:03.169147 Registered products with warehouse 
+2022-12-09 20:05:03.179436 Registered products with warehouse 
+2022-12-09 20:05:03.186738 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:05:04.266521 Registered products with warehouse 
+2022-12-09 20:05:04.282474 Registered products with warehouse 
+2022-12-09 20:05:04.297415 Registered products with warehouse 
+2022-12-09 20:05:04.313009 Found  boar  in warehouse. Informing trader  buyer0
+2022-12-09 20:05:05.428554 Registered products with warehouse 
+2022-12-09 20:05:05.460006 Registered products with warehouse 
+2022-12-09 20:05:05.492970 Registered products with warehouse 
+2022-12-09 20:05:05.508354 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:05:06.588992 Registered products with warehouse 
+2022-12-09 20:05:06.625717 Registered products with warehouse 
+2022-12-09 20:05:06.652578 Registered products with warehouse 
+2022-12-09 20:05:06.669593 No seller found for  salt
+2022-12-09 20:05:07.709319 Registered products with warehouse 
+2022-12-09 20:05:07.734961 Registered products with warehouse 
+2022-12-09 20:05:07.762001 Registered products with warehouse 
+2022-12-09 20:05:07.780540 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:05:08.854443 Registered products with warehouse 
+2022-12-09 20:05:08.861331 Registered products with warehouse 
+2022-12-09 20:05:08.872737 Registered products with warehouse 
+2022-12-09 20:05:08.886522 No seller found for  salt
+2022-12-09 20:05:09.921489 Registered products with warehouse 
+2022-12-09 20:05:09.965869 Registered products with warehouse 
+2022-12-09 20:05:09.995945 Registered products with warehouse 
+2022-12-09 20:05:10.013424 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:05:11.091138 Registered products with warehouse 
+2022-12-09 20:05:11.107045 Registered products with warehouse 
+2022-12-09 20:05:11.118995 Registered products with warehouse 
+2022-12-09 20:05:11.127174 No seller found for  salt
+2022-12-09 20:05:12.157073 Registered products with warehouse 
+2022-12-09 20:05:12.203856 Registered products with warehouse 
+2022-12-09 20:05:12.253818 Registered products with warehouse 
+2022-12-09 20:05:12.259651 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:05:13.346757 Registered products with warehouse 
+2022-12-09 20:05:13.381005 Registered products with warehouse 
+2022-12-09 20:05:13.410420 Registered products with warehouse 
+2022-12-09 20:05:13.436764 No seller found for  salt
+2022-12-09 20:05:14.475937 Registered products with warehouse 
+2022-12-09 20:05:14.516428 Registered products with warehouse 
+2022-12-09 20:05:14.541747 Registered products with warehouse 
+2022-12-09 20:05:14.563878 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:05:15.653341 Registered products with warehouse 
+2022-12-09 20:05:15.690575 Registered products with warehouse 
+2022-12-09 20:05:15.722905 Registered products with warehouse 
+2022-12-09 20:05:15.742167 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:05:16.830701 Registered products with warehouse 
+2022-12-09 20:05:16.883055 Registered products with warehouse 
+2022-12-09 20:05:16.909644 Registered products with warehouse 
+2022-12-09 20:05:16.920959 Found  fish  in warehouse. Informing trader  seller4
+2022-12-09 20:05:18.003903 Registered products with warehouse 
+2022-12-09 20:05:18.049057 Registered products with warehouse 
+2022-12-09 20:05:18.077418 Registered products with warehouse 
+2022-12-09 20:05:18.089106 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:05:19.194799 Registered products with warehouse 
+2022-12-09 20:05:19.220781 Registered products with warehouse 
+2022-12-09 20:05:19.244626 Registered products with warehouse 
+2022-12-09 20:05:19.257925 Found  boar  in warehouse. Informing trader  buyer0
+2022-12-09 20:05:20.342687 Registered products with warehouse 
+2022-12-09 20:05:20.371871 Registered products with warehouse 
+2022-12-09 20:05:20.400509 Registered products with warehouse 
+2022-12-09 20:05:20.411974 Found  boar  in warehouse. Informing trader  seller4
+2022-12-09 20:05:21.483058 Registered products with warehouse 
+2022-12-09 20:05:21.517291 Registered products with warehouse 
+2022-12-09 20:05:21.542893 Registered products with warehouse 
+2022-12-09 20:05:21.569042 No seller found for  salt
+2022-12-09 20:05:22.603841 Registered products with warehouse 
+2022-12-09 20:05:22.642002 Registered products with warehouse 
+2022-12-09 20:05:22.670467 Registered products with warehouse 
+2022-12-09 20:05:22.684181 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:05:23.799708 Registered products with warehouse 
+2022-12-09 20:05:23.837821 Registered products with warehouse 
+2022-12-09 20:05:23.848468 Registered products with warehouse 
+2022-12-09 20:05:23.854087 Found  boar  in warehouse. Informing trader  seller4
+2022-12-09 20:05:24.931444 Registered products with warehouse 
+2022-12-09 20:05:24.955896 Registered products with warehouse 
+2022-12-09 20:05:24.973312 Registered products with warehouse 
+2022-12-09 20:05:24.984025 No seller found for  salt
+2022-12-09 20:05:26.025637 Registered products with warehouse 
+2022-12-09 20:05:26.071741 Registered products with warehouse 
+2022-12-09 20:05:26.088108 Registered products with warehouse 
+2022-12-09 20:05:26.094890 No seller found for  salt
+2022-12-09 20:05:27.115638 Registered products with warehouse 
+2022-12-09 20:05:27.126521 Registered products with warehouse 
+2022-12-09 20:05:27.143238 Registered products with warehouse 
+2022-12-09 20:05:27.153857 No seller found for  salt
+2022-12-09 20:05:28.214232 Registered products with warehouse 
+2022-12-09 20:05:28.246568 Registered products with warehouse 
+2022-12-09 20:05:28.272694 Registered products with warehouse 
+2022-12-09 20:05:28.283663 Found  fish  in warehouse. Informing trader  buyer0
+2022-12-09 20:05:29.384064 Registered products with warehouse 
+2022-12-09 20:05:29.417144 Registered products with warehouse 
+2022-12-09 20:05:29.442765 Registered products with warehouse 
+2022-12-09 20:05:29.462506 No seller found for  salt
+2022-12-09 20:05:30.497412 Registered products with warehouse 
+2022-12-09 20:05:30.528569 Registered products with warehouse 
+2022-12-09 20:05:30.557433 Registered products with warehouse 
+2022-12-09 20:05:30.569734 No seller found for  salt
+2022-12-09 20:05:31.603753 Registered products with warehouse 
+2022-12-09 20:05:31.634186 Registered products with warehouse 
+2022-12-09 20:05:31.670591 Registered products with warehouse 
+2022-12-09 20:05:31.689273 Found  boar  in warehouse. Informing trader  seller4

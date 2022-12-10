@@ -1,0 +1,28 @@
+2022-12-09 20:01:42.794198 Dear buyers and sellers, my bully id is  195  (i.e  buyer0 )and I am the new coordinator
+2022-12-09 20:01:42.794565 sending won message to neighbor:  buyer5
+2022-12-09 20:01:42.797512 sending won message to neighbor:  seller4
+2022-12-09 20:01:42.800285 sending won message to neighbor:  buyer1
+2022-12-09 20:01:42.803641 sending won message to neighbor:  seller2
+2022-12-09 20:01:42.806464 sending won message to neighbor:  buyer3
+2022-12-09 20:01:42.809806 sending won message to neighbor:  server9
+2022-12-09 20:01:42.812867 coordinator notified all neighbors.
+2022-12-09 20:01:42.845340 received ping from  seller4
+2022-12-09 20:01:42.847339 Ping reply from  seller4  is  True
+2022-12-09 20:01:42.861863 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:01:42.862323 Checking if item  salt  is in cache
+2022-12-09 20:01:42.862407 Item not found in cache, loading from warehouse
+2022-12-09 20:01:42.862632 Checking if item  salt  is in cache
+2022-12-09 20:01:42.877830 Informed  buyer5  that transaction is complete for  salt
+2022-12-09 20:01:44.940961 Received request from buyer  buyer3 for product  boar (5)
+2022-12-09 20:01:44.941844 Checking if item  boar  is in cache
+2022-12-09 20:01:44.942160 Item not found in cache, loading from warehouse
+2022-12-09 20:01:44.942657 Checking if item  boar  is in cache
+2022-12-09 20:01:44.949581 Informed  buyer3  that no seller can fulfill the demand for  boar
+2022-12-09 20:01:47.032863 Received request from buyer  buyer1 for product  fish (5)
+2022-12-09 20:01:47.033281 Checking if item  fish  is in cache
+2022-12-09 20:01:47.033403 Item not found in cache, loading from warehouse
+2022-12-09 20:01:47.033620 Checking if item  fish  is in cache
+2022-12-09 20:01:47.036470 Informed  buyer1  that no seller can fulfill the demand for  fish
+2022-12-09 20:01:49.079780 seller2  registering products with trader  buyer0
+2022-12-09 20:01:52.851446 buyer0  is retiring from the market
+2022-12-09 20:01:52.867444 buyer0  Heartbeat:  True

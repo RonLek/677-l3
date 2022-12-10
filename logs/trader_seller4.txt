@@ -1,0 +1,269 @@
+2022-12-09 20:04:13.095727 Dear buyers and sellers, my bully id is  48  (i.e  seller4 )and I am the new coordinator
+2022-12-09 20:04:13.096342 sending won message to neighbor:  buyer0
+2022-12-09 20:04:13.101277 sending won message to neighbor:  seller1
+2022-12-09 20:04:13.107150 sending won message to neighbor:  buyer5
+2022-12-09 20:04:13.113835 sending won message to neighbor:  seller2
+2022-12-09 20:04:13.120226 sending won message to neighbor:  seller3
+2022-12-09 20:04:13.126296 sending won message to neighbor:  server9
+2022-12-09 20:04:13.133312 coordinator notified all neighbors.
+2022-12-09 20:04:15.212542 seller2  registering products with trader  seller4
+2022-12-09 20:04:15.221690 seller3  registering products with trader  seller4
+2022-12-09 20:04:16.266864 seller1  registering products with trader  seller4
+2022-12-09 20:04:16.342246 seller3  registering products with trader  seller4
+2022-12-09 20:04:17.391281 seller2  registering products with trader  seller4
+2022-12-09 20:04:17.433997 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:04:17.434438 Checking if item  salt  is in cache
+2022-12-09 20:04:17.434563 Item not found in cache, loading from warehouse
+2022-12-09 20:04:17.434882 Checking if item  salt  is in cache
+2022-12-09 20:04:17.439143 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:04:18.454368 seller2  registering products with trader  seller4
+2022-12-09 20:04:18.477714 seller3  registering products with trader  seller4
+2022-12-09 20:04:19.572876 seller1  registering products with trader  seller4
+2022-12-09 20:04:19.667878 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:04:19.668915 Checking if item  fish  is in cache
+2022-12-09 20:04:19.669161 Item found in cache
+2022-12-09 20:04:19.693838 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:04:20.752105 seller2  registering products with trader  seller4
+2022-12-09 20:04:20.785845 seller3  registering products with trader  seller4
+2022-12-09 20:04:21.913158 seller3  registering products with trader  seller4
+2022-12-09 20:04:21.937620 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:04:21.939324 Checking if item  salt  is in cache
+2022-12-09 20:04:21.940030 Item not found in cache, loading from warehouse
+2022-12-09 20:04:21.941641 Checking if item  salt  is in cache
+2022-12-09 20:04:21.953378 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:04:22.989469 seller1  registering products with trader  seller4
+2022-12-09 20:04:23.074042 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:04:23.075047 Checking if item  salt  is in cache
+2022-12-09 20:04:23.075300 Item not found in cache, loading from warehouse
+2022-12-09 20:04:23.075681 Checking if item  salt  is in cache
+2022-12-09 20:04:23.081401 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:04:24.162717 seller3  registering products with trader  seller4
+2022-12-09 20:04:25.243591 seller1  registering products with trader  seller4
+2022-12-09 20:04:25.276887 seller2  registering products with trader  seller4
+2022-12-09 20:04:25.332116 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:04:25.332904 Checking if item  boar  is in cache
+2022-12-09 20:04:25.333149 Item found in cache
+2022-12-09 20:04:25.359473 Informed  buyer5  that transaction is complete for  boar
+2022-12-09 20:04:26.371808 seller1  registering products with trader  seller4
+2022-12-09 20:04:26.381893 seller2  registering products with trader  seller4
+2022-12-09 20:04:26.394545 seller3  registering products with trader  seller4
+2022-12-09 20:04:26.405150 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:04:26.405667 Checking if item  boar  is in cache
+2022-12-09 20:04:26.405795 Item found in cache
+2022-12-09 20:04:26.429569 Informed  buyer5  that transaction is complete for  boar
+2022-12-09 20:04:27.437076 seller1  registering products with trader  seller4
+2022-12-09 20:04:27.452215 seller3  registering products with trader  seller4
+2022-12-09 20:04:27.459953 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:04:27.460321 Checking if item  boar  is in cache
+2022-12-09 20:04:27.460438 Item found in cache
+2022-12-09 20:04:27.482687 Informed  buyer5  that transaction is complete for  boar
+2022-12-09 20:04:28.503186 seller1  registering products with trader  seller4
+2022-12-09 20:04:29.609145 seller1  registering products with trader  seller4
+2022-12-09 20:04:29.618592 seller2  registering products with trader  seller4
+2022-12-09 20:04:29.633387 seller3  registering products with trader  seller4
+2022-12-09 20:04:29.643785 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:04:29.644312 Checking if item  salt  is in cache
+2022-12-09 20:04:29.644464 Item not found in cache, loading from warehouse
+2022-12-09 20:04:29.644806 Checking if item  salt  is in cache
+2022-12-09 20:04:29.648845 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:04:30.672136 seller1  registering products with trader  seller4
+2022-12-09 20:04:30.717033 seller2  registering products with trader  seller4
+2022-12-09 20:04:30.755587 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:04:30.756120 Checking if item  fish  is in cache
+2022-12-09 20:04:30.756265 Item found in cache
+2022-12-09 20:04:30.782562 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:04:31.815327 seller3  registering products with trader  seller4
+2022-12-09 20:04:32.882852 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:04:32.883639 Checking if item  salt  is in cache
+2022-12-09 20:04:32.883790 Item not found in cache, loading from warehouse
+2022-12-09 20:04:32.884104 Checking if item  salt  is in cache
+2022-12-09 20:04:32.887894 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:04:33.930117 seller1  registering products with trader  seller4
+2022-12-09 20:04:33.980195 seller2  registering products with trader  seller4
+2022-12-09 20:04:34.011859 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:04:34.012322 Checking if item  fish  is in cache
+2022-12-09 20:04:34.012458 Item found in cache
+2022-12-09 20:04:34.042966 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:04:35.050135 seller1  registering products with trader  seller4
+2022-12-09 20:04:35.060862 seller2  registering products with trader  seller4
+2022-12-09 20:04:35.068824 seller3  registering products with trader  seller4
+2022-12-09 20:04:36.190661 seller3  registering products with trader  seller4
+2022-12-09 20:04:36.206349 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:04:36.206716 Checking if item  salt  is in cache
+2022-12-09 20:04:36.206808 Item not found in cache, loading from warehouse
+2022-12-09 20:04:36.207415 Checking if item  salt  is in cache
+2022-12-09 20:04:36.212186 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:04:37.317806 seller2  registering products with trader  seller4
+2022-12-09 20:04:38.397668 seller1  registering products with trader  seller4
+2022-12-09 20:04:38.474254 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:04:38.474754 Checking if item  salt  is in cache
+2022-12-09 20:04:38.474898 Item not found in cache, loading from warehouse
+2022-12-09 20:04:38.475622 Checking if item  salt  is in cache
+2022-12-09 20:04:38.479470 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:04:39.537059 seller3  registering products with trader  seller4
+2022-12-09 20:04:40.602165 seller1  registering products with trader  seller4
+2022-12-09 20:04:40.653396 seller2  registering products with trader  seller4
+2022-12-09 20:04:40.674684 seller3  registering products with trader  seller4
+2022-12-09 20:04:40.686968 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:04:40.687491 Checking if item  boar  is in cache
+2022-12-09 20:04:40.687646 Item found in cache
+2022-12-09 20:04:40.716798 Informed  buyer5  that transaction is complete for  boar
+2022-12-09 20:04:41.738209 seller1  registering products with trader  seller4
+2022-12-09 20:04:41.815358 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:04:41.816301 Checking if item  boar  is in cache
+2022-12-09 20:04:41.816457 Item found in cache
+2022-12-09 20:04:41.845076 Informed  buyer5  that transaction is complete for  boar
+2022-12-09 20:04:42.869049 seller1  registering products with trader  seller4
+2022-12-09 20:04:42.931656 seller3  registering products with trader  seller4
+2022-12-09 20:04:42.949075 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:04:42.949685 Checking if item  salt  is in cache
+2022-12-09 20:04:42.949836 Item not found in cache, loading from warehouse
+2022-12-09 20:04:42.950156 Checking if item  salt  is in cache
+2022-12-09 20:04:42.957982 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:04:43.990950 seller1  registering products with trader  seller4
+2022-12-09 20:04:44.094880 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:04:44.095273 Checking if item  boar  is in cache
+2022-12-09 20:04:44.095397 Item found in cache
+2022-12-09 20:04:44.127268 Informed  buyer5  that transaction is complete for  boar
+2022-12-09 20:04:45.155942 seller2  registering products with trader  seller4
+2022-12-09 20:04:45.175269 seller3  registering products with trader  seller4
+2022-12-09 20:04:45.196737 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:04:45.197538 Checking if item  fish  is in cache
+2022-12-09 20:04:45.197731 Item found in cache
+2022-12-09 20:04:45.267053 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:04:46.305708 seller1  registering products with trader  seller4
+2022-12-09 20:04:46.393243 seller3  registering products with trader  seller4
+2022-12-09 20:04:47.445160 seller1  registering products with trader  seller4
+2022-12-09 20:04:47.473190 seller2  registering products with trader  seller4
+2022-12-09 20:04:48.568212 seller1  registering products with trader  seller4
+2022-12-09 20:04:50.871635 seller2  registering products with trader  seller4
+2022-12-09 20:04:50.882961 seller3  registering products with trader  seller4
+2022-12-09 20:04:51.932402 seller3  registering products with trader  seller4
+2022-12-09 20:04:51.942401 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:04:51.942849 Checking if item  fish  is in cache
+2022-12-09 20:04:51.942978 Item found in cache
+2022-12-09 20:04:51.983348 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:04:53.009980 seller2  registering products with trader  seller4
+2022-12-09 20:04:53.021632 seller3  registering products with trader  seller4
+2022-12-09 20:04:53.033129 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:04:53.033743 Checking if item  salt  is in cache
+2022-12-09 20:04:53.033922 Item not found in cache, loading from warehouse
+2022-12-09 20:04:53.034313 Checking if item  salt  is in cache
+2022-12-09 20:04:53.041032 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:04:54.163004 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:04:54.163711 Checking if item  boar  is in cache
+2022-12-09 20:04:54.163883 Item found in cache
+2022-12-09 20:04:54.204934 Informed  buyer5  that transaction is complete for  boar
+2022-12-09 20:04:55.318405 seller3  registering products with trader  seller4
+2022-12-09 20:04:57.469660 seller2  registering products with trader  seller4
+2022-12-09 20:04:57.497776 seller3  registering products with trader  seller4
+2022-12-09 20:04:57.521818 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:04:57.522599 Checking if item  boar  is in cache
+2022-12-09 20:04:57.522847 Item found in cache
+2022-12-09 20:04:57.569081 Informed  buyer5  that transaction is complete for  boar
+2022-12-09 20:04:58.578090 seller1  registering products with trader  seller4
+2022-12-09 20:04:59.688819 seller2  registering products with trader  seller4
+2022-12-09 20:05:00.842767 seller2  registering products with trader  seller4
+2022-12-09 20:05:00.876461 seller3  registering products with trader  seller4
+2022-12-09 20:05:00.902085 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:05:00.902895 Checking if item  fish  is in cache
+2022-12-09 20:05:00.903439 Item found in cache
+2022-12-09 20:05:00.945590 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:05:02.029940 seller2  registering products with trader  seller4
+2022-12-09 20:05:02.072312 seller3  registering products with trader  seller4
+2022-12-09 20:05:02.087501 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:05:02.088015 Checking if item  salt  is in cache
+2022-12-09 20:05:02.088144 Item not found in cache, loading from warehouse
+2022-12-09 20:05:02.088442 Checking if item  salt  is in cache
+2022-12-09 20:05:02.093023 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:05:03.117056 seller1  registering products with trader  seller4
+2022-12-09 20:05:03.151954 seller2  registering products with trader  seller4
+2022-12-09 20:05:03.186195 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:05:03.186566 Checking if item  fish  is in cache
+2022-12-09 20:05:03.186666 Item found in cache
+2022-12-09 20:05:03.253373 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:05:04.263668 seller1  registering products with trader  seller4
+2022-12-09 20:05:05.453110 seller2  registering products with trader  seller4
+2022-12-09 20:05:06.569319 seller1  registering products with trader  seller4
+2022-12-09 20:05:06.668006 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:05:06.668751 Checking if item  salt  is in cache
+2022-12-09 20:05:06.668967 Item not found in cache, loading from warehouse
+2022-12-09 20:05:06.669449 Checking if item  salt  is in cache
+2022-12-09 20:05:06.674282 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:05:07.701868 seller1  registering products with trader  seller4
+2022-12-09 20:05:07.754017 seller3  registering products with trader  seller4
+2022-12-09 20:05:07.778176 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:05:07.779387 Checking if item  fish  is in cache
+2022-12-09 20:05:07.779747 Item found in cache
+2022-12-09 20:05:07.842528 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:05:08.852344 seller1  registering products with trader  seller4
+2022-12-09 20:05:08.859057 seller2  registering products with trader  seller4
+2022-12-09 20:05:08.885709 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:05:08.886094 Checking if item  salt  is in cache
+2022-12-09 20:05:08.886192 Item not found in cache, loading from warehouse
+2022-12-09 20:05:08.886435 Checking if item  salt  is in cache
+2022-12-09 20:05:08.889798 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:05:09.955911 seller2  registering products with trader  seller4
+2022-12-09 20:05:10.012273 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:05:10.013030 Checking if item  fish  is in cache
+2022-12-09 20:05:10.013256 Item found in cache
+2022-12-09 20:05:10.073716 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:05:11.100785 seller2  registering products with trader  seller4
+2022-12-09 20:05:11.116031 seller3  registering products with trader  seller4
+2022-12-09 20:05:12.184158 seller2  registering products with trader  seller4
+2022-12-09 20:05:12.259044 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:05:12.259463 Checking if item  fish  is in cache
+2022-12-09 20:05:12.259572 Item found in cache
+2022-12-09 20:05:12.321509 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:05:13.341094 seller1  registering products with trader  seller4
+2022-12-09 20:05:13.370295 seller2  registering products with trader  seller4
+2022-12-09 20:05:13.400809 seller3  registering products with trader  seller4
+2022-12-09 20:05:13.434684 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:05:13.435747 Checking if item  salt  is in cache
+2022-12-09 20:05:13.436019 Item not found in cache, loading from warehouse
+2022-12-09 20:05:13.436539 Checking if item  salt  is in cache
+2022-12-09 20:05:13.444409 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:05:14.492162 seller2  registering products with trader  seller4
+2022-12-09 20:05:14.534979 seller3  registering products with trader  seller4
+2022-12-09 20:05:15.646802 seller1  registering products with trader  seller4
+2022-12-09 20:05:15.716202 seller3  registering products with trader  seller4
+2022-12-09 20:05:16.856998 seller2  registering products with trader  seller4
+2022-12-09 20:05:16.919629 Received request from buyer  buyer5 for product  fish (5)
+2022-12-09 20:05:16.920593 Checking if item  fish  is in cache
+2022-12-09 20:05:16.920805 Item found in cache
+2022-12-09 20:05:16.978419 Informed  buyer5  that transaction is complete for  fish
+2022-12-09 20:05:17.996934 seller1  registering products with trader  seller4
+2022-12-09 20:05:18.035253 seller2  registering products with trader  seller4
+2022-12-09 20:05:18.070614 seller3  registering products with trader  seller4
+2022-12-09 20:05:19.174196 seller1  registering products with trader  seller4
+2022-12-09 20:05:19.212833 seller2  registering products with trader  seller4
+2022-12-09 20:05:20.410469 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:05:20.411619 Checking if item  boar  is in cache
+2022-12-09 20:05:20.411836 Item found in cache
+2022-12-09 20:05:20.457784 Informed  buyer5  that transaction is complete for  boar
+2022-12-09 20:05:21.535638 seller3  registering products with trader  seller4
+2022-12-09 20:05:21.566606 Received request from buyer  buyer5 for product  salt (5)
+2022-12-09 20:05:21.567716 Checking if item  salt  is in cache
+2022-12-09 20:05:21.568078 Item not found in cache, loading from warehouse
+2022-12-09 20:05:21.568772 Checking if item  salt  is in cache
+2022-12-09 20:05:21.577091 Informed  buyer5  that no seller can fulfill the demand for  salt
+2022-12-09 20:05:22.660809 seller3  registering products with trader  seller4
+2022-12-09 20:05:23.853440 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:05:23.853871 Checking if item  boar  is in cache
+2022-12-09 20:05:23.853990 Item found in cache
+2022-12-09 20:05:23.901055 Informed  buyer5  that transaction is complete for  boar
+2022-12-09 20:05:24.922128 seller1  registering products with trader  seller4
+2022-12-09 20:05:24.947939 seller2  registering products with trader  seller4
+2022-12-09 20:05:26.019196 seller1  registering products with trader  seller4
+2022-12-09 20:05:26.084868 seller3  registering products with trader  seller4
+2022-12-09 20:05:27.111803 seller1  registering products with trader  seller4
+2022-12-09 20:05:27.123187 seller2  registering products with trader  seller4
+2022-12-09 20:05:27.139498 seller3  registering products with trader  seller4
+2022-12-09 20:05:28.204700 seller1  registering products with trader  seller4
+2022-12-09 20:05:28.236364 seller2  registering products with trader  seller4
+2022-12-09 20:05:29.401335 seller2  registering products with trader  seller4
+2022-12-09 20:05:30.550276 seller3  registering products with trader  seller4
+2022-12-09 20:05:31.596365 seller1  registering products with trader  seller4
+2022-12-09 20:05:31.688093 Received request from buyer  buyer5 for product  boar (5)
+2022-12-09 20:05:31.688863 Checking if item  boar  is in cache
+2022-12-09 20:05:31.689097 Item found in cache
