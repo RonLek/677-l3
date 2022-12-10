@@ -1,4 +1,4 @@
-# COMPSCI 687 Lab 2
+# COMPSCI 687 Lab 3
 
 This repository contains the source code and the implementation of the Lab 3 Problem statement, which is a part of COMPSCI 677: Distributed and Operating Systems course of UMass Amherst Fall 2022.
 
@@ -21,7 +21,7 @@ The main library used to implement this distributed setting is `Pyro5` which is 
 The main command used to run this code is
 
 ```bash
-python3 join.py localhost <number_of_peers> [true/false] [timeout_in_sec]
+python3 join.py localhost <number_of_peers> [fault_tolerance_toggle] [timeout_in_sec]
 ```
 
 In this command line argument `<number_of_peers>` refers to the number of peers to be included in this bazaar. In addition the penultimate argument refers to toggling the fault tolerance situation in the bazaar. The input for this argument is "true"/"false". The last argument refers to the timeout value (in seconds) needed to fail one of the traders, should `fault_tolerance` flag is "true". In case of "false", this value should be set to 0.
