@@ -189,7 +189,7 @@ class Peer(Process):
                         if self.role == "trader" and self.id not in traders:
                             traders.append(self.id)
 
-                    print(datetime.datetime.now(), "traders = ", traders)
+                    print(datetime.datetime.now(), "Traders selected are: ", traders)
 
                     for neighbor_name in self.neighbors:
                         with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
@@ -212,8 +212,6 @@ class Peer(Process):
                         # Register seller products with the warehouse
                         print(datetime.datetime.now(), "sellers register products with trader")
                         for neighbor_name in self.neighbors:
-                            print("before seller", neighbor_name)
-                            # print("neighbors", self.neighbors)
                             with Pyro5.api.Proxy(self.neighbors[neighbor_name]) as neighbor:
                                 if "seller" in neighbor_name and not neighbor.isRetire():
                                     neighbor.startSellerTrading()
@@ -262,7 +260,6 @@ class Peer(Process):
         :return: nothing
         """
 
-        print(datetime.datetime.now(), self.id, "received message", message, " from ", neighbor)
         # Acquire and release semaphore to ensure only one thread can access the critical section at a time
         self.clock_sem.acquire()
         self.adjustClockValue(neighbor["clock"])
@@ -438,13 +435,9 @@ class Peer(Process):
                 other_trader = self.trader[1]
             else:
                 other_trader = self.trader[0]
-            # with Pyro5.api.Proxy(self.neighbors[other_trader]) as neighbor:
-            #     print(other_trader)
-            #     print(neighbor)
             if fail_one == 1:
                 self.executor.submit(self.retire_with_time,self.heartbeat_timeout)
             self.executor.submit(self.ping_message, other_trader)
-            # pass
 
     @Pyro5.server.expose
     def retire_with_time(self,ttl):
@@ -455,7 +448,6 @@ class Peer(Process):
     
     @Pyro5.server.expose
     def ping_message(self,neighbor_id):
-        print(self.id,"[Trader]","inside ping message")
         while self.role == "trader":
             self.heartbeat = False
             self.executor.submit(self.ping_send,neighbor_id)
@@ -467,7 +459,7 @@ class Peer(Process):
                 break
         if self.role == "trader":
             with open("trader_" + self.id + ".txt","a+") as f:
-                print(datetime.datetime.now(), "Found other trader ", neighbor_id, " to be dead")
+                print(datetime.datetime.now(), "Found other trader ", neighbor_id, " to be dead", file=f)
             old_index_file = "transactions_trader_" + neighbor_id + ".json"
             with open("trader_" + self.id + ".txt","a+") as f:
                 print(datetime.datetime.now(), "Found trasactions file for other trader: ", old_index_file, file=f)
@@ -484,8 +476,6 @@ class Peer(Process):
                 if not pending_req:
                     for req in pending_req:
                         k,v  = req.items()[0]
-                        print(self.id,"[Trader]",k,v)
-                        # self.trading_unresolved_lookup(v)
         return
         
 
@@ -504,11 +494,7 @@ class Peer(Process):
 
     @Pyro5.server.expose
     def ping_send(self,neighbor_id):
-        print(self.id,"[Trader]","In Ping send")
         with Pyro5.api.Proxy(self.neighbors[neighbor_id]) as neighbor:
-            print(self.id,"[Trader]","In Ping send, found neighbour")
-            print(neighbor_id)
-            print(neighbor)
             x = neighbor.ping_reply(self.id)
         with open("trader_" + self.id + ".txt","a+") as f:
             print(datetime.datetime.now(), "Ping reply from ", neighbor_id, " is ", x, file=f)
@@ -632,7 +618,6 @@ class Peer(Process):
             data[seller_peer_id]["product_count"] -= item_count
             data[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
             data[seller_peer_id]["buyer_list"].append(buyer_info["id"])
-            print("data after buy", data)
             json.dump(data,sell)
 
         with open("server_outputs.txt") as f:
@@ -682,7 +667,6 @@ class Peer(Process):
             self.put_log(tlog,transactions_file,False,True)
 
             # Find sellers with the product
-            print(self.seller_information)
             sl = ''
             found = False
 
@@ -690,7 +674,6 @@ class Peer(Process):
                 # Check if the seller is in the cache
                 sl, found = self.check_seller_in_cache(item,item_count)
 
-            print("cache before ", found, sl, self.seller_information)
             # If not found in cache, load state and check again, avoids underselling
             if not sl or not found:
                 with open("trader_" + self.id + ".txt","a+") as f:
@@ -700,8 +683,6 @@ class Peer(Process):
             else:
                 with open("trader_" + self.id + ".txt","a+") as f:
                     print(datetime.datetime.now(),"Item found in cache", file = f)
-            
-            print("cache after ", found, sl, self.seller_information)
             
             if found:
                 if not sl:
@@ -719,7 +700,6 @@ class Peer(Process):
                     with open("server_outputs.txt","a+") as f:
                         print(datetime.datetime.now(),"Found ", item, " in warehouse. Informing trader ", self.id , file = f)
                     seller = sl
-                    # print("[DEBUG] seller: ", seller, " chosen for transaction")
                     seller_peer_id = seller["seller"]["id"]
                     print("seller with peer id ", seller_peer_id, " chosen for transactions")
                     # Add seller to the transaction log along with buyers interested in buying from it
@@ -729,7 +709,6 @@ class Peer(Process):
                         self.seller_information[seller_peer_id]["product_count"] -= item_count
                         self.seller_information[seller_peer_id]["seller_amount"] += item_count*seller['product_price']
                         self.seller_information[seller_peer_id]["buyer_list"].append(buyer_info["id"])
-                        print("seller information after buy", self.seller_information)
                         with Pyro5.api.Proxy(self.neighbors[seller_peer_id]) as seller_add:
                             seller_add.addBuyer(buyer_info["id"])
 
@@ -789,7 +768,6 @@ class Peer(Process):
 
 
                 # Find sellers with the product
-                print(self.seller_information)
                 sl, found = self.check_seller_in_cache(item,item_count)
 
                 # If not found in cache, load state and check again, avoids underselling
@@ -808,9 +786,7 @@ class Peer(Process):
                     else:
                         
                         seller = sl
-                        # print("[DEBUG] seller: ", seller, " chosen for transaction")
                         seller_peer_id = seller["seller"]["id"]
-                        print("seller with peer id ", seller_peer_id, " chosen for transactions")
                         # Add seller to the transaction log along with buyers interested in buying from it
                         # Update the trader's seller information to update the selected seller's transaction and its amount
                         # and save it to saved transactions file
@@ -941,8 +917,6 @@ class Peer(Process):
         :return: nothing
         """
         
-        print("within register_products")
-        print(seller_info)
         peer_id = seller_info["seller"]["id"]
         with open("trader_" + self.id + ".txt", "a+") as f:
             print(datetime.datetime.now(), peer_id, " registering products with trader ", self.id, file = f)
@@ -954,8 +928,6 @@ class Peer(Process):
         else:
             self.seller_information[peer_id] = seller_info
         
-        print("seller_information = ", self.seller_information)
-
         # update data in warehouse
         with Pyro5.api.Proxy(self.neighbors["server9"]) as neighbor:
             neighbor.register_products_with_warehouse(seller_info)
@@ -968,7 +940,6 @@ class Peer(Process):
             self.storage_semaphore.acquire()
             with open("seller_information.json") as sell:
                 data = json.load(sell)
-                print("data existing = ",data)
             self.storage_semaphore.release()
 
         self.storage_semaphore.acquire()
@@ -980,13 +951,9 @@ class Peer(Process):
 
             json.dump(data,sell)
         self.storage_semaphore.release()
-        print("data updated = ",data)
 
         with open("server_outputs.txt", "a+") as f:
             print(datetime.datetime.now(), "Registered products with warehouse ", file = f)
-    
-        with open("seller_information.json") as sell:
-            print("data in file = ",json.load(sell))
 
     @Pyro5.server.expose
     def load_state(self):
